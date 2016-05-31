@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <BitmapImage x:Key="AddImage" UriSource="/Resources/Images/add.png" />
+    <BitmapImage x:Key="EditImage" UriSource="/Resources/Images/edit.png" />
+    <BitmapImage x:Key="DeleteImage" UriSource="/Resources/Images/delete.png" />
+    <BitmapImage x:Key="BackImage" UriSource="/Resources/Images/back.png" />
+    <BitmapImage x:Key="QuestionImage" UriSource="/Resources/Images/question.png" />
+    <BitmapImage x:Key="StockManagementImage" UriSource="/Resources/Images/stock_management.png" />
+    <BitmapImage x:Key="SplitImage" UriSource="/Resources/Images/split.png" />
+    <BitmapImage x:Key="CancelImage" UriSource="/Resources/Images/cancel.png" />
+    <BitmapImage x:Key="CheckImage" UriSource="/Resources/Images/check.png" />
+    <BitmapImage x:Key="MeetingImage" UriSource="/Resources/Images/meeting.png" />
+    <BitmapImage x:Key="PaymentImage" UriSource="/Resources/Images/payment.png" />
+    <BitmapImage x:Key="ExpandImage" UriSource="/Resources/Images/expand.png" />
+    <BitmapImage x:Key="CollapseImage" UriSource="/Resources/Images/collapse.png" />
+    <BitmapImage x:Key="CalculateImage" UriSource="/Resources/Images/calculate.png" />
+    
+</ResourceDictionary>

@@ -1,0 +1,151 @@
+﻿<UserControl x:Class="StockBuddy.Client.Wpf.Views.DividendManagementView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StockBuddy.Client.Wpf.Views"
+             xmlns:behaviors="clr-namespace:StockBuddy.Client.Wpf.Behaviors"
+             xmlns:lvl="clr-namespace:Itenso.Windows.Controls.ListViewLayout;assembly=Itenso.Windows.Controls.ListViewLayout"
+             mc:Ignorable="d" d:DesignHeight="800" d:DesignWidth="1000"
+             Background="{StaticResource ViewBackgroundBrush}">
+    
+    <UserControl.Resources>
+        <GridView x:Key="DividendsGridView" x:Shared="False">
+            <GridView.Columns>
+                <GridViewColumn DisplayMemberBinding="{Binding GeneralMeeting.MeetingDate, StringFormat='d'}" Header="Dato" Width="120" />
+                <GridViewColumn DisplayMemberBinding="{Binding GeneralMeeting.Stock.Name}" Header="Papir" Width="260" />
+
+                <GridViewColumn Header="Antal" HeaderTemplate="{StaticResource RightGridViewHeaderTemplate}" Width="100">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Quantity}" TextAlignment="Right">
+                                <TextBlock.Style>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsDifferent}" Value="True">
+                                                <Setter Property="Foreground" Value="Red" />
+                                                <Setter Property="FontWeight" Value="Bold" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+
+                <GridViewColumn Header="Pr. stk." HeaderTemplate="{StaticResource RightGridViewHeaderTemplate}" Width="100">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding GeneralMeeting.DividendRate}" TextAlignment="Right" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+
+                <GridViewColumn Header="Udbytte" HeaderTemplate="{StaticResource RightGridViewHeaderTemplate}" Width="140">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DividendPayment, StringFormat='N2'}" TextAlignment="Right" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+
+                <GridViewColumn lvl:RangeColumn.IsFillColumn="True">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.Resources>
+                                    <Style TargetType="{x:Type StackPanel}">
+                                        <Setter Property="Orientation" Value="Horizontal" />
+                                        <Setter Property="HorizontalAlignment" Value="Right" />
+                                        <Setter Property="Margin" Value="0,0,4,0" />
+                                    </Style>
+                                </Grid.Resources>
+                                
+                                <StackPanel Visibility="{Binding ShowCreatedInfo, Converter={StaticResource boolToVisConv}}">
+                                    <Button Style="{StaticResource SmallAddButtonStyle}"
+                                            Visibility="{Binding IsCreated, Converter={StaticResource boolToVisConv}, ConverterParameter=false}"
+                                            Command="{Binding DataContext.AddDividendCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                            CommandParameter="{Binding}" />
+
+                                    <Image Source="{StaticResource CheckImage}"
+                                           Visibility="{Binding IsCreated, Converter={StaticResource boolToVisConv}}"
+                                           Height="20" Width="20"  />
+                                </StackPanel>
+
+                                <StackPanel Visibility="{Binding ShowCreatedInfo, Converter={StaticResource boolToVisConv}, ConverterParameter=false}">
+                                    <Button Style="{StaticResource SmallDeleteButtonStyle}"
+                                            Command="{Binding DataContext.DeleteDividendCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                            CommandParameter="{Binding}" />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+            </GridView.Columns>
+        </GridView>
+    </UserControl.Resources>
+    
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                <TextBox Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource SmallTextBoxStyle}"
+                         behaviors:FocusElementBehavior.GiveKeyboardFocus="{Binding IsNavigatedTo}"
+                         Width="250" />
+            </StackPanel>
+
+            <ListView Style="{StaticResource StandardListViewStyle}"
+                      ItemsSource="{Binding DividendsCollectionView}"
+                      View="{StaticResource DividendsGridView}"
+                      lvl:ListViewLayoutManager.Enabled="True"
+                      Grid.Row="1" />
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                <ComboBox x:Name="cmb" Style="{StaticResource SmallComboBoxStyle}"
+                          ItemsSource="{Binding SharedDataProvider.GeneralMeetingYears}"
+                          SelectedValue="{Binding SelectedYear}"
+                          Width="80"
+                          Margin="0,0,15,0" />
+
+                <Button Content="BEREGN UDBYTTE" 
+                        Command="{Binding CalculateDividendsCommand}"
+                        Height="25" Margin="0">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource CalculateButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedItem, ElementName=cmb}" Value="{x:Null}">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+
+            <ListView Style="{StaticResource StandardListViewStyle}"
+                      ItemsSource="{Binding CalculatedDividends}"
+                      View="{StaticResource DividendsGridView}"
+                      lvl:ListViewLayoutManager.Enabled="True"
+                      Grid.Row="1" />
+        </Grid>
+    </Grid>
+</UserControl>

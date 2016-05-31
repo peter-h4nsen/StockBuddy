@@ -1,0 +1,68 @@
+﻿<Window x:Class="StockBuddy.Client.Wpf.Views.HostWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:behaviors="clr-namespace:StockBuddy.Client.Wpf.Behaviors"
+        xmlns:commands="clr-namespace:StockBuddy.Client.Shared.Commands;assembly=StockBuddy.Client.Shared"
+        SnapsToDevicePixels="True"
+        UseLayoutRounding="True"
+        Title="StockBuddy" 
+        Height="830" Width="1100">
+
+    <Grid behaviors:ScaleToWindowSizeBehavior.ParentWindow="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Top area of the root window with page title and some buttons-->
+        <Border Height="70"
+                Background="#4F230D">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button Style="{StaticResource BackButtonStyle}"
+                        Command="{Binding ViewService.NavigateBackCommand}"
+                        Margin="15,0,0,0" />
+
+                <StackPanel Grid.Column="1" 
+                            VerticalAlignment="Center" 
+                            Margin="20,0">
+
+                    <TextBlock Text="{Binding ViewService.CurrentPageTitle, FallbackValue=OVERSKRIFT STÅR HER}">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StandardTextBlockStyle}">
+                                <Setter Property="FontSize" Value="24" />
+                                <Setter Property="Foreground" Value="White" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ViewService.CurrentPageSubTitle}" Value="{x:Null}">
+                                        <Setter Property="FontSize" Value="32" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <TextBlock Style="{StaticResource StandardTextBlockStyle}"
+                               Text="{Binding ViewService.CurrentPageSubTitle}"
+                               Visibility="{Binding ViewService.CurrentPageSubTitle, Converter={StaticResource nullToVisConv}}"
+                               Foreground="White"
+                               FontSize="18" />
+                </StackPanel>
+
+                <ListBox Style="{StaticResource GlobalButtonsListBoxStyle}"
+                         ItemsSource="{Binding ViewService.GlobalButtons}"
+                         SelectedItem="{Binding ViewService.SelectedGlobalButton}"
+                         Grid.Column="2" />
+            </Grid>
+        </Border>
+
+        <!-- Area with the content of the currently shown page -->
+        <Border Background="{StaticResource ViewBackgroundBrush}" Grid.Row="1">
+            <ContentPresenter Content="{Binding ViewService.CurrentView}" />
+        </Border>
+    </Grid>
+</Window>

@@ -1,0 +1,33 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="ViewBackgroundBrush" Color="#26120A" />
+
+
+    <SolidColorBrush x:Key="StandardForegroundBrush" Color="#F0D9C5" />
+
+    <SolidColorBrush x:Key="SelectedItemBackgroundBrush" Color="#D16C00" />
+    <SolidColorBrush x:Key="SelectedItemBorderBrush" Color="#FFF200" />
+    <SolidColorBrush x:Key="SelectedItemForegroundBrush" Color="White" />
+
+    <SolidColorBrush x:Key="ProfitForegroundBrush" Color="#55CC00" />
+    <SolidColorBrush x:Key="LossForegroundBrush" Color="#F00400" />
+
+
+    <SolidColorBrush x:Key="GradientButtonForegroundBrush" Color="#F1B106" />
+
+    <LinearGradientBrush x:Key="GradientButtonBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#AD3A05" Offset="0" />
+        <GradientStop Color="#541209" Offset="1" />
+    </LinearGradientBrush>
+
+    <SolidColorBrush x:Key="GradientButtonBorderBrush" Color="#E65C00" />
+
+    <LinearGradientBrush x:Key="GradientButtonHighlightBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#C74306" Offset="0" />
+        <GradientStop Color="#6E170C" Offset="1" />
+    </LinearGradientBrush>
+
+    <SolidColorBrush x:Key="GradientButtonHighlightBorderBrush" Color="#FF7700" />
+
+</ResourceDictionary>

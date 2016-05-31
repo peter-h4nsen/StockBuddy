@@ -1,0 +1,40 @@
+﻿<Application x:Class="StockBuddy.Client.Wpf.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"  
+             xmlns:converters="clr-namespace:StockBuddy.Client.Wpf.Converters" 
+             xmlns:Controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <converters:EnumDescriptionConverter x:Key="enumDescConv" />
+                    <converters:BooleanToVisibilityConverter x:Key="boolToVisConv" />
+                    <converters:NullToVisibilityConverter x:Key="nullToVisConv" />
+                    <converters:InvertBooleanConverter x:Key="invertBoolConv" />
+
+                    <converters:BooleanToGreenRedBrushConverter x:Key="boolToGreenRedConv">
+                        <converters:BooleanToGreenRedBrushConverter.BrushResources>
+                            <ResourceDictionary Source="/ResourceDictionaries/Brushes.xaml" />
+                        </converters:BooleanToGreenRedBrushConverter.BrushResources>
+                    </converters:BooleanToGreenRedBrushConverter>
+                </ResourceDictionary>
+
+                <ResourceDictionary Source="/ResourceDictionaries/Images.xaml" />
+                <ResourceDictionary Source="/ResourceDictionaries/Brushes.xaml" />
+                <ResourceDictionary Source="/ResourceDictionaries/TextElementStyles.xaml" />
+                <ResourceDictionary Source="/ResourceDictionaries/ValidationErrorTemplateStyles.xaml" />
+                <ResourceDictionary Source="/ResourceDictionaries/InputElementStyles.xaml" />
+                <ResourceDictionary Source="/ResourceDictionaries/ViewElementStyles.xaml" />
+                <ResourceDictionary Source="/ResourceDictionaries/ButtonStyles.xaml" />
+                <ResourceDictionary Source="/ResourceDictionaries/ListBoxStyles.xaml" />
+                <ResourceDictionary Source="/ResourceDictionaries/ListViewStyles.xaml" />
+                <ResourceDictionary Source="/ResourceDictionaries/RadioButtonStyles.xaml" />
+                <ResourceDictionary Source="/ResourceDictionaries/ScrollBarStyles.xaml" />
+                <ResourceDictionary Source="/ResourceDictionaries/ExpanderStyles.xaml" />
+                <ResourceDictionary Source="/ResourceDictionaries/ExpandableGridStyles.xaml" />
+                <ResourceDictionary Source="/ResourceDictionaries/TabControlStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

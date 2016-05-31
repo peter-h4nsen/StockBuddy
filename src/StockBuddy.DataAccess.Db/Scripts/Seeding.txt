@@ -1,0 +1,25 @@
+﻿INSERT INTO Deposits (Description, IdentityNumber, DepositType, DateCreated)
+VALUES ('Sydbank depot til test', '080650001012660', 1, GETDATE())
+
+
+INSERT INTO dbo.Stocks (Name, Symbol, ISIN, IsActive) VALUES 
+--('Novo Nordisk A/S B', 'NOVO-B', 'DK0060534915', 1),
+('Genmab A/S', 'GEN', 'DK0010272202', 1),
+('Vestas Wind Systems A/S', 'VWS', 'DK0010268606', 1),
+('Danske Bank', 'DANSKE', 'DK0010274414', 1),
+('Sydbank A/S', 'SYDB', 'DK0010311471', 1),
+('D/S Norden', 'DNORD', 'DK0060083210', 1),
+('Pandora A/S', 'PNDORA', 'DK0060252690', 1),
+('Bavarian Nordic', 'BAVA', 'DK0015998017', 1),
+('Parken Sport & Entertainment', 'PARKEN', 'DK0010237643', 1),
+('FLSmidth & Co B', 'FLS', 'DK0010234467', 1),
+('G4S', 'GFS', 'GB00B01FLG62', 1),
+('A.P. Møller Mærsk A', 'MAERSK-B', 'DK0010244425', 1),
+('OW Bunker A/S', 'OW', 'DK0060548386', 1)
+
+
+INSERT INTO dbo.Trades (IsBuy, Quantity, Price, Commission, TradeDate, DepositId, StockId)
+SELECT b.[ErKøb], b.Antal, b.Fondskurs, b.Omkostninger, b.Handelsdato, d.ID, s.ID
+FROM HandlerBackup b
+INNER JOIN dbo.Stocks s ON s.ISIN = b.ISIN
+INNER JOIN dbo.Deposits d ON d.IdentityNumber = b.Depotnummer

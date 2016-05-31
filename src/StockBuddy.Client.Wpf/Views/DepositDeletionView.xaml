@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="StockBuddy.Client.Wpf.Views.DepositDeletionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="1000"
+             Background="{StaticResource ViewBackgroundBrush}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Border Style="{StaticResource ViewBoxStyle1}"
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                Padding="100,40">
+
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+
+                <TextBlock Style="{StaticResource ColoredTextBlockStyle}"
+                           Text="ADVARSEL!!"
+                           FontSize="28"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,30" />
+
+                <TextBlock Style="{StaticResource LargeColoredTextBlockStyle}"
+                           LineHeight="30"
+                           Margin="0,0,0,40">
+                    <Run Text="Er du sikker på depotet skal slettes?" />
+                    <LineBreak />
+                    <Run Text="Alle data tilknyttet depotet vil blive slettet!" />
+                    <LineBreak />
+                    <Run Text="For at godkende skal du skrive &quot;SLET&quot; i boksen." />
+                </TextBlock>
+
+                <TextBlock Style="{StaticResource LargeColoredTextBlockStyle}"
+                           LineHeight="25"
+                           Margin="0,0,0,60">
+                    <Run Text="Depotoplysninger:" />
+                    <LineBreak />
+                    <Run Text="{Binding Deposit.Description, FallbackValue=Depotbeskrivelse kommer her}" />
+                    <LineBreak />
+                    <Run Text="{Binding Deposit.IdentityNumber, FallbackValue=987427142321}" />
+                    <LineBreak />
+                    <Run Text="{Binding Deposit.DepositType, Converter={StaticResource enumDescConv}, FallbackValue=Åbent depot}" />
+                </TextBlock>
+
+                <TextBox Style="{StaticResource LargeTextBoxStyle}"
+                         Text="{Binding ConfirmationText, UpdateSourceTrigger=PropertyChanged}"
+                         Width="300"
+                         HorizontalAlignment="Center" />
+            </StackPanel>
+        </Border>
+
+        <StackPanel Style="{StaticResource BottomViewPanelStyle}"
+                    Grid.Row="1">
+
+            <Button Style="{StaticResource StandardButtonStyle}"
+                    Content="SLET DEPOT"
+                    Command="{Binding DeleteCommand}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

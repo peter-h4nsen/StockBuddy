@@ -1,0 +1,29 @@
+Papiroplysninger
+
+Beholdning
+Antallet af aktier i depotet i forvejen.
+
+
+Kursværdi
+
+Denne handel
+Værdien på handlen beregnet ud fra indtastet kurs og antal.
+
+Realtime
+Værdien på handlen beregnet ud fra realtidskursen og antal.
+Viser hvor meget handlen er værd nu, i forhold til da den blev indgået.
+
+Papiret i alt
+Total værdien af papiret i hele depotet efter oprettelse af den indtastede handel.
+
+
+Andel i depotet
+
+Denne handel
+Viser hvor stor en andel den indtastede handel vil udgøre af depotet, hvis handlen bliver gemt.
+
+Papiret i alt
+Viser hvor stor en andel aktien for den indtastede handel vil udgøre af depotet, hvis handlen bliver gemt.
+
+
+

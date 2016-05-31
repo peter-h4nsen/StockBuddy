@@ -1,0 +1,84 @@
+﻿/* *********************** Deposits *********************** */
+CREATE TABLE dbo.Deposits (
+  ID int IDENTITY(1, 1) NOT NULL,
+  Description nvarchar(100) NOT NULL,
+  IdentityNumber nvarchar(30) NOT NULL,
+  DepositType tinyint NOT NULL,
+  DateCreated datetime NOT NULL,
+  PRIMARY KEY CLUSTERED (ID)
+)
+GO
+
+
+/* ************************* Stocks ************************ */
+CREATE TABLE dbo.Stocks (
+  ID int IDENTITY(1, 1) NOT NULL,
+  Name nvarchar(50) NOT NULL,
+  Symbol nvarchar(30) NOT NULL,
+  ISIN nvarchar(12) NOT NULL,
+  StockType tinyint NOT NULL,
+  IsActive bit NOT NULL,
+  PRIMARY KEY CLUSTERED (ID)
+)
+GO
+
+/* ********************** StockSplits ********************** */
+CREATE TABLE dbo.StockSplits (
+  ID int IDENTITY(1, 1) NOT NULL,
+  Date date NOT NULL,
+  OldStockID int NOT NULL,
+  NewStockID int NOT NULL,
+  RatioFrom int NOT NULL,
+  RatioTo int NOT NULL,
+  PRIMARY KEY CLUSTERED (ID)
+    WITH (
+      PAD_INDEX = OFF, IGNORE_DUP_KEY = OFF, STATISTICS_NORECOMPUTE = OFF,
+      ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON),
+  CONSTRAINT FK_StockSplits_NewStockID_Stocks FOREIGN KEY (NewStockID) 
+  REFERENCES dbo.Stocks (ID) 
+  ON UPDATE NO ACTION
+  ON DELETE NO ACTION,
+  CONSTRAINT FK_StockSplits_OldStockID_Stocks FOREIGN KEY (OldStockID) 
+  REFERENCES dbo.Stocks (ID) 
+  ON UPDATE NO ACTION
+  ON DELETE NO ACTION
+)
+
+/* ************************* Trades ************************ */
+CREATE TABLE dbo.Trades (
+  ID int IDENTITY(1, 1) NOT NULL,
+  IsBuy bit NOT NULL,
+  Quantity int NOT NULL,
+  Price decimal(10, 2) NOT NULL,
+  Commission decimal(10, 2) NOT NULL,
+  TradeDate datetime NOT NULL,
+  DepositId int NOT NULL,
+  StockId int NOT NULL,
+  PRIMARY KEY CLUSTERED (ID)
+)
+GO
+
+ALTER TABLE dbo.Trades
+ADD CONSTRAINT FK_Trades_DepositId_Deposits FOREIGN KEY (DepositId) 
+  REFERENCES dbo.Deposits (ID) 
+  ON UPDATE NO ACTION
+  ON DELETE NO ACTION
+GO
+
+ALTER TABLE dbo.Trades
+ADD CONSTRAINT FK_Trades_StockId_Stocks FOREIGN KEY (StockId) 
+  REFERENCES dbo.Stocks (ID) 
+  ON UPDATE NO ACTION
+  ON DELETE NO ACTION
+GO
+
+
+/* ******************* HistoricalStockInfo ****************** */
+CREATE TABLE dbo.HistoricalStockInfo (
+  ID int IDENTITY(1, 1) NOT NULL,
+  Symbol nvarchar(20) NOT NULL,
+  Date datetime NOT NULL,
+  [Close] decimal(10, 2) NOT NULL,
+  PRIMARY KEY CLUSTERED (ID)
+)
+GO

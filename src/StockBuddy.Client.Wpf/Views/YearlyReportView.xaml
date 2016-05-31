@@ -1,0 +1,367 @@
+﻿<UserControl x:Class="StockBuddy.Client.Wpf.Views.YearlyReportView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StockBuddy.Client.Wpf.Views"
+             mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="1000"
+             Background="{StaticResource ViewBackgroundBrush}">
+
+    <TabControl Margin="15">
+        <TabItem Header="Total">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                    <ComboBox x:Name="cmb" Style="{StaticResource SmallComboBoxStyle}"
+                              ItemsSource="{Binding TaxYears}"
+                              SelectedValue="{Binding SelectedYear}"
+                              Width="80"
+                              Margin="0,0,20,0" />
+
+                    <CheckBox IsChecked="{Binding IsMarried}"
+                              VerticalAlignment="Center"
+                              VerticalContentAlignment="Center"
+                              Margin="0,0,20,0">
+                        <TextBlock Text="Er gift" Style="{StaticResource ColoredTextBlockStyle}" />
+                    </CheckBox>
+
+                    <Button Content="BEREGN" 
+                            Command="{Binding CalculateCommand}"
+                            Height="25" Margin="0">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource CalculateButtonStyle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SelectedItem, ElementName=cmb}" Value="{x:Null}">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+            
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer.Resources>
+                        <Style x:Key="OuterBoxStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource ViewBoxStyle1}">
+                            <Setter Property="HorizontalAlignment" Value="Stretch" />
+                            <Setter Property="Padding" Value="15" />
+                            <Setter Property="Margin" Value="0,0,0,15" />
+                        </Style>
+                        <Style x:Key="GroupHeaderTextBlockStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource LargeColoredTextBlockStyle}">
+                            <Setter Property="FontSize" Value="22" />
+                        </Style>
+                        <Style x:Key="InnerStackPanelStyle" TargetType="{x:Type StackPanel}">
+                            <Setter Property="Orientation" Value="Horizontal" />
+                            <Setter Property="Margin" Value="0,18,0,0" />
+                        </Style>
+                        <Style x:Key="ItemStackPanelStyle" TargetType="{x:Type StackPanel}">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                        <Style x:Key="InnerBoxStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource ViewBoxStyle2}">
+                            <Setter Property="MinWidth" Value="280" />
+                            <Setter Property="Padding" Value="10" />
+                            <Setter Property="Margin" Value="0,0,15,0" />
+                        </Style>
+                        <Style x:Key="ItemHeaderTextBlockStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource SmallColoredTextBlockStyle}">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="FontSize" Value="15" />
+                            <Setter Property="Margin" Value="0,0,0,5" />
+                        </Style>
+                        <Style x:Key="SubItemHeaderTextBlockStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ItemHeaderTextBlockStyle}">
+                            <Setter Property="FontSize" Value="12" />
+                            <Setter Property="Margin" Value="0" />
+                        </Style>
+                        <Style x:Key="StandardTextBlockStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource LargeColoredTextBlockStyle}">
+                            <Setter Property="FontWeight" Value="Bold" />
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </ScrollViewer.Resources>
+
+                    <StackPanel>
+                        <Border Style="{StaticResource OuterBoxStyle}">
+                            <StackPanel>
+                                <TextBlock Text="Gevinst og tab på aktier" Style="{StaticResource GroupHeaderTextBlockStyle}" />
+
+                                <StackPanel Style="{StaticResource InnerStackPanelStyle}">
+                                    <Border Style="{StaticResource InnerBoxStyle}">
+                                        <StackPanel Style="{StaticResource ItemStackPanelStyle}">
+                                            <TextBlock Text="KURSGEVINST" Style="{StaticResource ItemHeaderTextBlockStyle}" />
+                                            <TextBlock Text="{Binding YearlyReport.Profit, StringFormat='N2'}" Style="{StaticResource ProfitTextBlockStyle}" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Style="{StaticResource InnerBoxStyle}">
+                                        <StackPanel Style="{StaticResource ItemStackPanelStyle}">
+                                            <TextBlock Text="KURSTAB" Style="{StaticResource ItemHeaderTextBlockStyle}" />
+                                            <TextBlock Text="{Binding YearlyReport.Loss, StringFormat='N2'}" Style="{StaticResource LossTextBlockStyle}" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Style="{StaticResource InnerBoxStyle}" 
+                                            BorderBrush="{Binding YearlyReport.IsProfit, Converter={StaticResource boolToGreenRedConv}}">
+                                        <StackPanel Style="{StaticResource ItemStackPanelStyle}">
+                                            <TextBlock Text="TOTAL (RUBRIK 66)" Style="{StaticResource ItemHeaderTextBlockStyle}" />
+                                            
+                                            <TextBlock Text="{Binding YearlyReport.ProfitLoss, StringFormat='N2'}" 
+                                                       Style="{StaticResource StandardTextBlockStyle}"
+                                                       Foreground="{Binding YearlyReport.IsProfit, Converter={StaticResource boolToGreenRedConv}}" />
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource OuterBoxStyle}">
+                            <StackPanel>
+                                <TextBlock Text="Udbytte" Style="{StaticResource GroupHeaderTextBlockStyle}" />
+
+                                <StackPanel Style="{StaticResource InnerStackPanelStyle}">
+                                    <Border Style="{StaticResource InnerBoxStyle}">
+                                        <StackPanel Style="{StaticResource ItemStackPanelStyle}">
+                                            <TextBlock Text="DANSKE AKTIER (RUBRIK 61)" Style="{StaticResource ItemHeaderTextBlockStyle}" />
+                                            <TextBlock Text="{Binding YearlyReport.DividendDanishStocks, StringFormat='N2'}" Style="{StaticResource ProfitTextBlockStyle}" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Style="{StaticResource InnerBoxStyle}">
+                                        <StackPanel Style="{StaticResource ItemStackPanelStyle}">
+                                            <TextBlock Text="UDENLANDSKE AKTIER (RUBRIK 63)" Style="{StaticResource ItemHeaderTextBlockStyle}" />
+                                            <TextBlock Text="{Binding YearlyReport.DividendForeignStocks, StringFormat='N2'}" Style="{StaticResource ProfitTextBlockStyle}" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Style="{StaticResource InnerBoxStyle}">
+                                        <StackPanel Style="{StaticResource ItemStackPanelStyle}">
+                                            <TextBlock Text="INVESTERINGSBEVISER (RUBRIK 31)" Style="{StaticResource ItemHeaderTextBlockStyle}" />
+                                            <TextBlock Text="{Binding YearlyReport.DividendInvestmentFonds, StringFormat='N2'}" Style="{StaticResource ProfitTextBlockStyle}" />
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource OuterBoxStyle}">
+                            <StackPanel>
+                                <TextBlock Text="Total aktieindkomst" Style="{StaticResource GroupHeaderTextBlockStyle}" />
+
+                                <StackPanel Style="{StaticResource InnerStackPanelStyle}">
+                                    <Border Style="{StaticResource InnerBoxStyle}">
+                                        <StackPanel Style="{StaticResource ItemStackPanelStyle}">
+                                            <TextBlock Text="AFKAST" Style="{StaticResource ItemHeaderTextBlockStyle}" />
+                                            
+                                            <TextBlock Text="{Binding YearlyReport.GrossReturnDescription}" 
+                                                       Style="{StaticResource SubItemHeaderTextBlockStyle}" />
+                                            
+                                            <TextBlock Text="{Binding YearlyReport.GrossReturn, StringFormat='N2'}" 
+                                                       Style="{StaticResource StandardTextBlockStyle}"
+                                                       Foreground="{Binding YearlyReport.IsPositiveReturn, Converter={StaticResource boolToGreenRedConv}}" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Style="{StaticResource InnerBoxStyle}">
+                                        <StackPanel Style="{StaticResource ItemStackPanelStyle}">
+                                            <TextBlock Text="SKAT" Style="{StaticResource ItemHeaderTextBlockStyle}" />
+                                            
+                                            <TextBlock Text="{Binding YearlyReport.TaxPaymentDescription}" 
+                                                       Style="{StaticResource SubItemHeaderTextBlockStyle}" />
+                                            
+                                            <TextBlock Text="{Binding YearlyReport.TaxPayment, StringFormat='N2'}" 
+                                                       Style="{StaticResource LossTextBlockStyle}" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Style="{StaticResource InnerBoxStyle}"
+                                            BorderBrush="{Binding YearlyReport.IsPositiveReturn, Converter={StaticResource boolToGreenRedConv}}">
+                                        <StackPanel Style="{StaticResource ItemStackPanelStyle}">
+                                            <TextBlock Text="NETTOAFKAST" Style="{StaticResource ItemHeaderTextBlockStyle}" />
+                                            
+                                            <TextBlock Text="{Binding YearlyReport.NetReturn, StringFormat='N2'}" 
+                                                       Style="{StaticResource StandardTextBlockStyle}"
+                                                       Foreground="{Binding YearlyReport.IsPositiveReturn, Converter={StaticResource boolToGreenRedConv}}" />
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+
+                                <StackPanel Style="{StaticResource InnerStackPanelStyle}">
+                                    <Border Style="{StaticResource InnerBoxStyle}">
+                                        <StackPanel Style="{StaticResource ItemStackPanelStyle}">
+                                            <TextBlock Text="FRADRAG PÅ TAB" Style="{StaticResource ItemHeaderTextBlockStyle}" />
+                                            <TextBlock Text="{Binding YearlyReport.LossDeduction, StringFormat='N2'}" Style="{StaticResource ProfitTextBlockStyle}" />
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </TabItem>
+
+        <TabItem Header="Gevinst og tab">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <DockPanel Grid.Row="0" Margin="0,0,0,10" LastChildFill="False">
+                    <TextBox Text="{Binding StockGroupFilterText, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource SmallTextBoxStyle}"
+                             Width="250" />
+
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                        <Button Style="{StaticResource SmallExpandButtonStyle}"
+                                Command="{Binding ExpandAllCommand}"
+                                Margin="0,0,4,0" />
+
+                        <Button Style="{StaticResource SmallCollapseButtonStyle}"
+                                Command="{Binding CollapseAllCommand}" />
+                    </StackPanel>
+                </DockPanel>
+
+                <HeaderedItemsControl Style="{StaticResource ExpandableGridStyle}"
+                                      ItemsSource="{Binding StockGroupsCollectionView}"
+                                      Grid.Row="1">
+                    <HeaderedItemsControl.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="250" SharedSizeGroup="A" />
+                                    <ColumnDefinition Width="120" SharedSizeGroup="B" />
+                                    <ColumnDefinition Width="120" SharedSizeGroup="C" />
+                                    <ColumnDefinition Width="150" SharedSizeGroup="D" />
+                                    <ColumnDefinition Width="150" SharedSizeGroup="E" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="Beskrivelse" Grid.Column="0" />
+                                <TextBlock Text="Dato" Grid.Column="1" />
+                                <TextBlock Text="Antal" Grid.Column="2" TextAlignment="Right" />
+                                <TextBlock Text="Salgsværdi" Grid.Column="3" TextAlignment="Right" />
+                                <TextBlock Text="Købsværdi" Grid.Column="4" TextAlignment="Right" />
+                                <TextBlock Text="Gevinst/tab" Grid.Column="5" HorizontalAlignment="Right" />
+                            </Grid>
+                        </DataTemplate>
+                    </HeaderedItemsControl.HeaderTemplate>
+                    <HeaderedItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Expander IsExpanded="{Binding IsExpanded}">
+                                <Expander.Header>
+                                    <DockPanel Height="35" LastChildFill="False">
+                                        <TextBlock Text="{Binding StockGroup.Header}"
+                                                   Style="{StaticResource ColoredTextBlockStyle}" />
+
+                                        <TextBlock DockPanel.Dock="Right" 
+                                                   Style="{StaticResource SmallColoredTextBlockStyle}"
+                                                   Text="{Binding StockGroup.ProfitLoss, StringFormat='N2'}"
+                                                   Foreground="{Binding StockGroup.IsProfit, Converter={StaticResource boolToGreenRedConv}}"
+                                                   FontWeight="Bold" />
+                                    </DockPanel>
+                                </Expander.Header>
+
+                                <ListBox ItemsSource="{Binding StockGroup.Items}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition SharedSizeGroup="A" />
+                                                    <ColumnDefinition SharedSizeGroup="B" />
+                                                    <ColumnDefinition SharedSizeGroup="C" />
+                                                    <ColumnDefinition SharedSizeGroup="D" />
+                                                    <ColumnDefinition SharedSizeGroup="E" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Text="{Binding Description}" Grid.Column="0" />
+                                                <TextBlock Text="{Binding Date, StringFormat='d'}" Grid.Column="1" />
+                                                <TextBlock Text="{Binding Quantity, StringFormat='N0'}" Grid.Column="2" TextAlignment="Right" />
+
+                                                <TextBlock Text="{Binding SellValue, StringFormat='N2'}" Grid.Column="3" TextAlignment="Right" 
+                                                           Visibility="{Binding IsSale, Converter={StaticResource boolToVisConv}}" />
+
+                                                <TextBlock Text="{Binding BuyValue, StringFormat='N2'}" Grid.Column="4" TextAlignment="Right" />
+
+                                                <TextBlock Text="{Binding ProfitLoss, StringFormat='N2'}" Grid.Column="5" TextAlignment="Right" 
+                                                           Visibility="{Binding IsSale, Converter={StaticResource boolToVisConv}}"
+                                                           Foreground="{Binding IsProfit, Converter={StaticResource boolToGreenRedConv}}"
+                                                           FontWeight="Bold" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ListBox>
+                            </Expander>
+                        </DataTemplate>
+                    </HeaderedItemsControl.ItemTemplate>
+                </HeaderedItemsControl>
+            </Grid>
+        </TabItem>
+
+        <TabItem Header="Udbytte">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                    <TextBox Text="{Binding DividendFilterText, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource SmallTextBoxStyle}"
+                             Width="250" />
+                </StackPanel>
+
+                <ListView Style="{StaticResource StandardListViewStyle}"
+                          ItemsSource="{Binding DividendsCollectionView}"
+                          Grid.Row="1">
+                    <ListView.View>
+                        <GridView>
+                            <GridView.Columns>
+                                <GridViewColumn DisplayMemberBinding="{Binding Date, StringFormat='d'}" Header="Dato" Width="85" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Description}" Header="Papir" Width="225" />
+                                <GridViewColumn DisplayMemberBinding="{Binding StockType}" Header="Type" Width="85" />
+
+                                <GridViewColumn Header="Antal" HeaderTemplate="{StaticResource RightGridViewHeaderTemplate}" Width="85">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Quantity, StringFormat='N2'}" TextAlignment="Right" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn Header="Pr. stk." HeaderTemplate="{StaticResource RightGridViewHeaderTemplate}" Width="100">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding DividendRate, StringFormat='N2'}" TextAlignment="Right" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn Header="Udbytte" HeaderTemplate="{StaticResource RightGridViewHeaderTemplate}" Width="120">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding GrossDividendPayment, StringFormat='N2'}" TextAlignment="Right" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn Header="Skat" HeaderTemplate="{StaticResource RightGridViewHeaderTemplate}" Width="120">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding TaxPayment, StringFormat='N2'}" TextAlignment="Right" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn Header="Nettoudbytte" HeaderTemplate="{StaticResource RightGridViewHeaderTemplate}" Width="140">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding NetDividendPayment, StringFormat='N2'}" TextAlignment="Right"
+                                                       Foreground="{StaticResource ProfitForegroundBrush}" FontWeight="Bold" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView.Columns>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</UserControl>
