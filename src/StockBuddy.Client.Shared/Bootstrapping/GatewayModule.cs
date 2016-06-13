@@ -44,11 +44,6 @@ namespace StockBuddy.Client.Shared.Bootstrapping
                 .AsSelf()
                 .SingleInstance();
 
-            //builder
-            //    .Register(p => new DbContextFactory(_connectionstring, _providerName))
-            //    .AsSelf()
-            //    .SingleInstance();
-
             builder
                 .RegisterType<EfRepositoryFactory>()
                 .AsSelf()

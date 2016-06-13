@@ -5,6 +5,8 @@ using StockBuddy.Client.Shared.Messaging;
 using StockBuddy.Client.Shared.Services;
 using StockBuddy.Client.Shared.Services.Contracts;
 using StockBuddy.Shared.Utilities;
+using StockBuddy.Shared.Utilities.AppSettings;
+using StockBuddy.Domain.Settings;
 
 namespace StockBuddy.Client.Shared.Bootstrapping
 {
@@ -45,7 +47,16 @@ namespace StockBuddy.Client.Shared.Bootstrapping
             builder.RegisterType<Messagebus>().As<IMessagebus>().SingleInstance();
             builder.RegisterType<SharedDataProvider>().As<ISharedDataProvider>().SingleInstance();
 
+            builder.RegisterInstance(CreateSettingsProvider()).AsImplementedInterfaces().SingleInstance();
+
             return builder.Build();
+        }
+
+        private IAppSettingsProvider<GlobalSettings> CreateSettingsProvider()
+        {
+            return 
+                new AppSettingsProvider<GlobalSettings>(
+                    new SqlServerSettingsStore(_connectionstring));
         }
     }
 }

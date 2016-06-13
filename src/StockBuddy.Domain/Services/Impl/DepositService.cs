@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using StockBuddy.Domain.DTO;
 using StockBuddy.Domain.Repositories;
 using StockBuddy.Domain.DTO.YearlyReport;
+using StockBuddy.Domain.Settings;
+using StockBuddy.Shared.Utilities.AppSettings;
 
 namespace StockBuddy.Domain.Services.Impl
 {
@@ -16,13 +18,17 @@ namespace StockBuddy.Domain.Services.Impl
     {
         private readonly IUnitOfWorkFactory _uowFactory;
         private readonly IStockPositionCalculator _stockPositionCalculator;
+        private readonly IAppSettingsProvider<GlobalSettings> _settingsProvider;
 
-        public DepositService(IUnitOfWorkFactory uowfactory, IStockPositionCalculator stockPositionCalculator)
+        public DepositService(IUnitOfWorkFactory uowfactory, 
+                              IStockPositionCalculator stockPositionCalculator, 
+                              IAppSettingsProvider<GlobalSettings> settingsProvider)
         {
-            Guard.AgainstNull(() => uowfactory, () => stockPositionCalculator);
+            Guard.AgainstNull(() => uowfactory, () => stockPositionCalculator, () => settingsProvider);
 
             _uowFactory = uowfactory;
             _stockPositionCalculator = stockPositionCalculator;
+            _settingsProvider = settingsProvider;
         }
 
         public Deposit CreateDeposit(Deposit deposit)
@@ -355,10 +361,9 @@ namespace StockBuddy.Domain.Services.Impl
 
         private Tuple<decimal, string> CalculateTax(decimal grossReturn, bool isMarried)
         {
-            //TODO: Skal gemmes i nogle settings eller lign.
-            decimal lowTaxLimit = 49900;
-            decimal lowTaxRate = 27;
-            decimal highTaxRate = 42;
+            decimal lowTaxLimit = _settingsProvider.Instance.LowTaxLimit;
+            decimal lowTaxRate = _settingsProvider.Instance.LowTaxRate;
+            decimal highTaxRate = _settingsProvider.Instance.HighTaxRate;
 
             if (isMarried)
             {
@@ -384,7 +389,7 @@ namespace StockBuddy.Domain.Services.Impl
             decimal lowTax = lowTaxAmount * (lowTaxRate / 100);
             decimal highTax = highTaxAmount * (highTaxRate / 100);
             decimal totalTax = lowTax + highTax;
-            string description = $"({lowTaxRate}% af {lowTaxAmount:N2}) + ({highTaxRate}% af {highTaxAmount:N2})";
+            string description = $"({lowTaxRate:N0}% af {lowTaxAmount:N2}) + ({highTaxRate:N0}% af {highTaxAmount:N2})";
 
             return Tuple.Create(totalTax, description);
         }
