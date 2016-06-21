@@ -56,6 +56,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppSettingsClasses\AppSettings.cs" />
+    <Compile Include="AppSettingsClasses\FileSystemSettingsStore.cs" />
+    <Compile Include="AppSettingsClasses\GlobalSettings.cs" />
+    <Compile Include="AppSettingsClasses\ISettingsStore.cs" />
+    <Compile Include="AppSettingsClasses\SqlServerSettingsStore.cs" />
+    <Compile Include="MySettings.cs" />
+    <Compile Include="Old.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -75,6 +82,10 @@
     <ProjectReference Include="..\StockBuddy.Domain\StockBuddy.Domain.csproj">
       <Project>{e945d4c7-3e6b-4fee-8e8d-c44a4f06c3a4}</Project>
       <Name>StockBuddy.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StockBuddy.Shared.Utilities\StockBuddy.Shared.Utilities.csproj">
+      <Project>{f2fa6ec4-5359-4642-bf0d-6c8571dcd880}</Project>
+      <Name>StockBuddy.Shared.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
