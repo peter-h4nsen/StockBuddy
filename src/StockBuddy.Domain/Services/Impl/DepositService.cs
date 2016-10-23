@@ -128,14 +128,29 @@ namespace StockBuddy.Domain.Services.Impl
             decimal grossReturn = grossReturnNoLossDeduction + totalLoss;
             string grossReturnDescription = $"{totalProfitLoss:N2} + {dividendDanishStocks:N2} + {dividendForeignStocks:N2}";
 
-            var taxInfo = CalculateTax(grossReturn, isMarried);
-            decimal taxPayment = taxInfo.Item1;
-            string taxPaymentDescription = taxInfo.Item2;
+            // Tax. If correct settings are not available don't calculate anything.
+            decimal taxPayment = -1;
+            string taxPaymentDescription = string.Empty;
+            decimal netReturn = -1;
+            decimal taxPaymentNoLossDeduction = -1;
+            decimal lossDeduction = -1;
+            bool isMissingTaxValueSettings = false;
 
-            decimal netReturn = grossReturn - taxPayment;
+            TaxValues taxValues = null;
 
-            decimal taxPaymentNoLossDeduction = CalculateTax(grossReturnNoLossDeduction, isMarried).Item1;
-            decimal lossDeduction = taxPaymentNoLossDeduction - taxPayment;
+            if (_settingsProvider.Instance.YearlyTaxValues?.TryGetValue(year, out taxValues) == true)
+            {
+                var taxInfo = CalculateTax(grossReturn, isMarried, taxValues);
+                taxPayment = taxInfo.Item1;
+                taxPaymentDescription = taxInfo.Item2;
+                netReturn = grossReturn - taxPayment;
+                taxPaymentNoLossDeduction = CalculateTax(grossReturnNoLossDeduction, isMarried, taxValues).Item1;
+                lossDeduction = taxPaymentNoLossDeduction - taxPayment;
+            }
+            else
+            {
+                isMissingTaxValueSettings = true;
+            }
 
             return new YearlyReportDTO
             (
@@ -153,6 +168,7 @@ namespace StockBuddy.Domain.Services.Impl
                 netReturn: netReturn,
                 isPositiveReturn: netReturn >= 0,
                 lossDeduction: lossDeduction,
+                isMissingTaxValueSettings: isMissingTaxValueSettings,
                 stockGroups: reportStockGroups,
                 dividends: reportDividends
             );
@@ -359,25 +375,21 @@ namespace StockBuddy.Domain.Services.Impl
             return Tuple.Create(buyMarketvalue, profitLoss);
         }
 
-        private Tuple<decimal, string> CalculateTax(decimal grossReturn, bool isMarried)
+        private Tuple<decimal, string> CalculateTax(decimal grossReturn, bool isMarried, TaxValues taxValues)
         {
-            decimal lowTaxLimit = _settingsProvider.Instance.LowTaxLimit;
-            decimal lowTaxRate = _settingsProvider.Instance.LowTaxRate;
-            decimal highTaxRate = _settingsProvider.Instance.HighTaxRate;
-
             if (isMarried)
             {
-                lowTaxLimit *= 2;
+                taxValues.LowTaxLimit *= 2;
             }
                 
             decimal lowTaxAmount = 0, highTaxAmount = 0;
 
             if (grossReturn >= 0)
             {
-                if (grossReturn > lowTaxLimit)
+                if (grossReturn > taxValues.LowTaxLimit)
                 {
-                    lowTaxAmount = lowTaxLimit;
-                    highTaxAmount = grossReturn - lowTaxLimit;
+                    lowTaxAmount = taxValues.LowTaxLimit;
+                    highTaxAmount = grossReturn - taxValues.LowTaxLimit;
                 }
                 else
                 {
@@ -386,10 +398,12 @@ namespace StockBuddy.Domain.Services.Impl
                 }
             }
 
-            decimal lowTax = lowTaxAmount * (lowTaxRate / 100);
-            decimal highTax = highTaxAmount * (highTaxRate / 100);
+            decimal lowTax = lowTaxAmount * (taxValues.LowTaxRate / 100);
+            decimal highTax = highTaxAmount * (taxValues.HighTaxRate / 100);
             decimal totalTax = lowTax + highTax;
-            string description = $"({lowTaxRate:N0}% af {lowTaxAmount:N2}) + ({highTaxRate:N0}% af {highTaxAmount:N2})";
+
+            string description = 
+                $"({taxValues.LowTaxRate:N0}% af {lowTaxAmount:N2}) + ({taxValues.HighTaxRate:N0}% af {highTaxAmount:N2})";
 
             return Tuple.Create(totalTax, description);
         }

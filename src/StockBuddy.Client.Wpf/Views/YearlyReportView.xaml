@@ -75,6 +75,15 @@
                             <Setter Property="FontSize" Value="12" />
                             <Setter Property="Margin" Value="0" />
                         </Style>
+                        <Style x:Key="SubItemHeaderMissingValuesTextBlockStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource SubItemHeaderTextBlockStyle}">
+                            <Setter Property="Text" Value="Mangler skattesatser for at kunne beregne" />
+                            <Setter Property="Visibility" 
+                                    Value="{Binding YearlyReport.IsMissingTaxValueSettings, FallbackValue=Collapsed, Converter={StaticResource boolToVisConv}}" />
+                        </Style>
+                        <Style x:Key="MissingValuesStackPanelStyle" TargetType="{x:Type StackPanel}">
+                            <Setter Property="Visibility" 
+                                    Value="{Binding YearlyReport.IsMissingTaxValueSettings, Converter={StaticResource boolToVisConv}, ConverterParameter=False}" />
+                        </Style>
                         <Style x:Key="StandardTextBlockStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource LargeColoredTextBlockStyle}">
                             <Setter Property="FontWeight" Value="Bold" />
                             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -160,22 +169,30 @@
                                     <Border Style="{StaticResource InnerBoxStyle}">
                                         <StackPanel Style="{StaticResource ItemStackPanelStyle}">
                                             <TextBlock Text="SKAT" Style="{StaticResource ItemHeaderTextBlockStyle}" />
-                                            
-                                            <TextBlock Text="{Binding YearlyReport.TaxPaymentDescription}" 
-                                                       Style="{StaticResource SubItemHeaderTextBlockStyle}" />
-                                            
-                                            <TextBlock Text="{Binding YearlyReport.TaxPayment, StringFormat='N2'}" 
-                                                       Style="{StaticResource LossTextBlockStyle}" />
+
+                                            <StackPanel Style="{StaticResource MissingValuesStackPanelStyle}">
+                                                <TextBlock Text="{Binding YearlyReport.TaxPaymentDescription}" 
+                                                           Style="{StaticResource SubItemHeaderTextBlockStyle}" />
+
+                                                <TextBlock Text="{Binding YearlyReport.TaxPayment, StringFormat='N2'}" 
+                                                           Style="{StaticResource LossTextBlockStyle}" />
+                                            </StackPanel>
+
+                                            <TextBlock Style="{StaticResource SubItemHeaderMissingValuesTextBlockStyle}" />
                                         </StackPanel>
                                     </Border>
                                     <Border Style="{StaticResource InnerBoxStyle}"
                                             BorderBrush="{Binding YearlyReport.IsPositiveReturn, Converter={StaticResource boolToGreenRedConv}}">
                                         <StackPanel Style="{StaticResource ItemStackPanelStyle}">
                                             <TextBlock Text="NETTOAFKAST" Style="{StaticResource ItemHeaderTextBlockStyle}" />
-                                            
-                                            <TextBlock Text="{Binding YearlyReport.NetReturn, StringFormat='N2'}" 
-                                                       Style="{StaticResource StandardTextBlockStyle}"
-                                                       Foreground="{Binding YearlyReport.IsPositiveReturn, Converter={StaticResource boolToGreenRedConv}}" />
+
+                                            <StackPanel Style="{StaticResource MissingValuesStackPanelStyle}">
+                                                <TextBlock Text="{Binding YearlyReport.NetReturn, StringFormat='N2'}" 
+                                                           Style="{StaticResource StandardTextBlockStyle}"
+                                                           Foreground="{Binding YearlyReport.IsPositiveReturn, Converter={StaticResource boolToGreenRedConv}}" />
+                                            </StackPanel>
+
+                                            <TextBlock Style="{StaticResource SubItemHeaderMissingValuesTextBlockStyle}" />
                                         </StackPanel>
                                     </Border>
                                 </StackPanel>
@@ -184,7 +201,12 @@
                                     <Border Style="{StaticResource InnerBoxStyle}">
                                         <StackPanel Style="{StaticResource ItemStackPanelStyle}">
                                             <TextBlock Text="FRADRAG PÅ TAB" Style="{StaticResource ItemHeaderTextBlockStyle}" />
-                                            <TextBlock Text="{Binding YearlyReport.LossDeduction, StringFormat='N2'}" Style="{StaticResource ProfitTextBlockStyle}" />
+
+                                            <StackPanel Style="{StaticResource MissingValuesStackPanelStyle}">
+                                                <TextBlock Text="{Binding YearlyReport.LossDeduction, StringFormat='N2'}" Style="{StaticResource ProfitTextBlockStyle}" />
+                                            </StackPanel>
+                                            
+                                            <TextBlock Style="{StaticResource SubItemHeaderMissingValuesTextBlockStyle}" />
                                         </StackPanel>
                                     </Border>
                                 </StackPanel>

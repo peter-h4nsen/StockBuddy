@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace StockBuddy.Domain.Settings
 {
-    public class GlobalSettings
+    public class TaxValues
     {
-        public Dictionary<int, TaxValues> YearlyTaxValues { get; set; }
+        public decimal LowTaxLimit { get; set; }
+        public decimal LowTaxRate { get; set; }
+        public decimal HighTaxRate { get; set; }
     }
 }
