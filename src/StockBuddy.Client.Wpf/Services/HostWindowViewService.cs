@@ -224,7 +224,7 @@ namespace StockBuddy.Client.Wpf.Services
 
             if (!isNextViewModelGlobal)
             {
-                // Nulstil global knap hvis der navigeres væk fra et globalt view og hent på et ikke-globalt.
+                // Nulstil global knap hvis der navigeres væk fra et globalt view og hen på et ikke-globalt.
                 if (_currentViewModel != null && IsViewModelGlobal(_currentViewModel.GetType()))
                     SelectedGlobalButton = null;
             }

@@ -12,7 +12,7 @@ namespace StockBuddy.Domain.DTO.YearlyReport
             decimal profit, decimal loss, decimal profitLoss, bool isProfit,
             decimal dividendDanishStocks, decimal dividendForeignStocks, decimal dividendInvestmentFonds,
             decimal grossReturn, string grossReturnDescription, decimal taxPayment, string taxPaymentDescription,
-            decimal netReturn, bool isPositiveReturn, decimal lossDeduction,
+            decimal netReturn, bool isPositiveReturn, decimal lossDeduction, bool isMissingTaxValueSettings,
             IEnumerable<YearlyReportStockGroupDTO> stockGroups, IEnumerable<YearlyReportDividendDTO> dividends)
         {
             Profit = profit;
@@ -31,6 +31,7 @@ namespace StockBuddy.Domain.DTO.YearlyReport
             NetReturn = netReturn;
             IsPositiveReturn = isPositiveReturn;
             LossDeduction = lossDeduction;
+            IsMissingTaxValueSettings = isMissingTaxValueSettings;
 
             StockGroups = stockGroups;
             Dividends = dividends;
@@ -52,6 +53,7 @@ namespace StockBuddy.Domain.DTO.YearlyReport
         public decimal NetReturn { get; }
         public bool IsPositiveReturn { get; }
         public decimal LossDeduction { get; }
+        public bool IsMissingTaxValueSettings { get; }
 
         public IEnumerable<YearlyReportStockGroupDTO> StockGroups { get; }
         public IEnumerable<YearlyReportDividendDTO> Dividends { get; }

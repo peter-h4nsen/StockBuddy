@@ -79,6 +79,7 @@
     <Compile Include="Services\Impl\StockService.cs" />
     <Compile Include="Services\Impl\TradeService.cs" />
     <Compile Include="Settings\GlobalSettings.cs" />
+    <Compile Include="Settings\TaxValues.cs" />
     <Compile Include="Validation\EntityValidationException.cs" />
     <Compile Include="Validation\IValidatable.cs" />
     <Compile Include="Validation\ValidationExtensions.cs" />
