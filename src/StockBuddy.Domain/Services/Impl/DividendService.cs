@@ -32,10 +32,10 @@ namespace StockBuddy.Domain.Services.Impl
 
             foreach (var generalMeeting in generalMeetingsInYear)
             {
-                var holding = _stockPositionCalculator.GetStockHolding(
+                var position = _stockPositionCalculator.GetStockPosition(
                     deposit, generalMeeting.Stock.Splitted.Id, generalMeeting.MeetingDate);
 
-                var quantity = holding.Quantity;
+                var quantity = position.Quantity;
 
                 if (quantity > 0)
                 {

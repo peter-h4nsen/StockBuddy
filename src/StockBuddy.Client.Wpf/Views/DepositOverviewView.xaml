@@ -40,7 +40,7 @@
               Margin="15">
 
             <ListView Style="{StaticResource StandardListViewStyle}"
-                      ItemsSource="{Binding Deposit.Trades}"
+                      ItemsSource="{Binding Deposit.StockPositions}"
                       lvl:ListViewLayoutManager.Enabled="True">
                 <ListView.View>
                     <GridView>
@@ -55,13 +55,13 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
 
-                            <GridViewColumn Header="Pris" HeaderTemplate="{StaticResource RightGridViewHeaderTemplate}" Width="100">
+                            <!--<GridViewColumn Header="Pris" HeaderTemplate="{StaticResource RightGridViewHeaderTemplate}" Width="100">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Price}" TextAlignment="Right" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
+                            </GridViewColumn>-->
 
                             <GridViewColumn lvl:RangeColumn.IsFillColumn="True">
                                 <GridViewColumn.CellTemplate>
@@ -69,14 +69,16 @@
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,4,0">
                                             <Button Content="Køb" 
                                                     Style="{StaticResource SmallButtonStyle}" 
-                                                    Command="{Binding DataContext.CreateBuyTradeCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                    Command="{Binding DataContext.CreateBuyTradeCommand, 
+                                                                      RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                                                     CommandParameter="{Binding}"
                                                     Background="Green" 
                                                     Margin="0,0,5,0" />
                                             
                                             <Button Content="Sælg" 
                                                     Style="{StaticResource SmallButtonStyle}" 
-                                                    Command="{Binding DataContext.CreateSellTradeCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                    Command="{Binding DataContext.CreateSellTradeCommand, 
+                                                                      RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                                                     CommandParameter="{Binding}"
                                                     Background="Red" />
                                         </StackPanel>

@@ -251,6 +251,7 @@ namespace StockBuddy.Client.Shared.ViewModels
             Trade.CommitChanges();
 
             _sharedDataProvider.RefreshDepositTradeAdded(Deposit, Trade);
+
             _viewService.NavigateTo(typeof(DepositOverviewViewModel));
             CleanUp(false);
         }

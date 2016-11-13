@@ -51,6 +51,12 @@ namespace StockBuddy.Client.Shared.DomainGateways.Mapping
             var depositVm = GetDepositViewModel(depositInfoDTO.Deposit);
             depositVm.SellableStockIds = depositInfoDTO.SellableStockIds;
 
+            foreach (var stockPosition in depositInfoDTO.StockPositions)
+            {
+                var stockPositionVm = GetStockPositionViewModel(stockPosition);
+                depositVm.StockPositions.Add(stockPositionVm);
+            }
+
             if (depositInfoDTO.Deposit.Trades != null)
             {
                 foreach (var trade in depositInfoDTO.Deposit.Trades)
@@ -60,7 +66,6 @@ namespace StockBuddy.Client.Shared.DomainGateways.Mapping
 
                     if (trade.Stock != null)
                         tradeVm.Stock = _cache.GetStock(trade.StockId);
-                        //tradeVm.Stock = GetStockViewModel(trade.Stock);
 
                     depositVm.Trades.Add(tradeVm);
                 }
@@ -73,9 +78,6 @@ namespace StockBuddy.Client.Shared.DomainGateways.Mapping
                     var dividendVm = GetDividendViewModel(dividend);
                     dividendVm.Deposit = depositVm;
                     depositVm.Dividends.Add(dividendVm);
-
-                    //if (dividend.GeneralMeeting != null)
-                    //    dividendVm.GeneralMeeting = GetGeneralMeetingViewModel(dividend.GeneralMeeting);
                 }
             }
 
@@ -195,6 +197,15 @@ namespace StockBuddy.Client.Shared.DomainGateways.Mapping
                 vm.GeneralMeeting = GetGeneralMeetingViewModel(dividend.GeneralMeeting);
 
             return vm;
+        }
+
+        private StockPositionViewModel GetStockPositionViewModel(StockPosition stockPosition)
+        {
+            return new StockPositionViewModel
+            {
+                Quantity = stockPosition.Quantity,
+                Stock = _cache.GetStock(stockPosition.StockId)
+            };
         }
     }
 }

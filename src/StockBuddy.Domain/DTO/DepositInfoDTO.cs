@@ -9,15 +9,16 @@ namespace StockBuddy.Domain.DTO
 {
     public sealed class DepositInfoDTO
     {
-        public DepositInfoDTO(Deposit deposit, /*IEnumerable<StockHolding> stockHoldings,*/ IEnumerable<int> sellableStockIds)
+        public DepositInfoDTO(Deposit deposit,  IEnumerable<int> sellableStockIds, IEnumerable<StockPosition> stockPositions)
         {
             Deposit = deposit;
-            //StockHoldings = stockHoldings;
             SellableStockIds = sellableStockIds;
+            StockPositions = stockPositions;
         }
 
         public Deposit Deposit { get; }
-        //public IEnumerable<StockHolding> StockHoldings { get; }
         public IEnumerable<int> SellableStockIds { get; }
+
+        public IEnumerable<StockPosition> StockPositions { get; }
     }
 }

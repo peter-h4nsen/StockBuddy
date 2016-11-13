@@ -52,16 +52,8 @@ namespace StockBuddy.Domain.Entities
         
         private int CalculateSplittedQuantity(int quantity, DateTime? toDate = null)
         {
-            //foreach (var split in Stock.GetStockSplits(toDate))
-            //    quantity = (int)Math.Ceiling(quantity * split.Multiplier);
-
-            //return quantity;
-
-            // Det samme?
             return Stock.GetStockSplits(toDate)
                 .Aggregate(quantity, (val, s) => (int)Math.Ceiling(val * s.Multiplier));
-
-            
         }
 
         public decimal MarketvalueInclCommission => (Quantity * Price) + CommissionSigned;

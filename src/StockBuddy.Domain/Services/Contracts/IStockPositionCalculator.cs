@@ -6,10 +6,8 @@ namespace StockBuddy.Domain.Services.Contracts
 {
     public interface IStockPositionCalculator
     {
-        IEnumerable<Position> GetPositions(Deposit deposit);
-        IEnumerable<StockHolding> GetStockHoldings(Deposit deposit);
-        StockHolding GetStockHolding(Deposit deposit, int stockId, DateTime date);
-        int CalculateTotalQuantity(IEnumerable<Trade> trades);
+        IEnumerable<StockPosition> GetStockPositions(Deposit deposit);
+        StockPosition GetStockPosition(Deposit deposit, int stockId, DateTime date);
         decimal CalculateMarketValue(int quantity, decimal price);
     }
 }

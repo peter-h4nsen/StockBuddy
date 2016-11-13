@@ -76,6 +76,9 @@ namespace StockBuddy.Client.Shared.Services
             depositVm.SellableStockIds = refreshedDepositVm.SellableStockIds;
             depositVm.Trades.Add(refreshedTradeVm);
 
+            var refreshedPosition = refreshedDepositVm.StockPositions.Single(p => p.Stock.Id == refreshedTradeVm.Stock.Id);
+            depositVm.StockPositions.Single(p => p.Stock.Id == refreshedTradeVm.Stock.Id).Quantity = refreshedPosition.Quantity;
+
             // Add new trade to the collection of stocks.
             var stock = Stocks.Single(p => p.Id == refreshedTradeVm.Stock.Id);
             stock.Trades.Add(refreshedTradeVm);

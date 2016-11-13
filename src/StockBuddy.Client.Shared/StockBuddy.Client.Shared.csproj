@@ -93,6 +93,7 @@
     <Compile Include="ViewModels\StockDeletionViewModel.cs" />
     <Compile Include="ViewModels\StockEditorViewModel.cs" />
     <Compile Include="ViewModels\StockManagementViewModel.cs" />
+    <Compile Include="ViewModels\StockPositionViewModel.cs" />
     <Compile Include="ViewModels\StockSplitManagementViewModel.cs" />
     <Compile Include="ViewModels\StockSplitViewModel.cs" />
     <Compile Include="ViewModels\StockViewModel.cs" />
