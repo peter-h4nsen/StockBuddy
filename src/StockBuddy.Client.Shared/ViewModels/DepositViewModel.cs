@@ -11,6 +11,7 @@ namespace StockBuddy.Client.Shared.ViewModels
         {
             Trades = new ObservableCollection<TradeViewModel>();
             Dividends = new ObservableCollection<DividendViewModel>();
+            StockPositions = new ObservableCollection<StockPositionViewModel>();
             SellableStockIds = new int[0];
         }
 
@@ -39,6 +40,7 @@ namespace StockBuddy.Client.Shared.ViewModels
 
         public ObservableCollection<TradeViewModel> Trades { get; }
         public ObservableCollection<DividendViewModel> Dividends { get; }
+        public ObservableCollection<StockPositionViewModel> StockPositions { get; }
         
         public IEnumerable<int> SellableStockIds { get; set; }
 

@@ -42,7 +42,7 @@ namespace StockBuddy.Domain.Services.Impl
         {
             Guard.AgainstNull(() => deposit);
 
-            //TODO: Modtag som parameter når vi har realtime-kurser
+            //TODO: Modtag som parameter når vi har realtime-kurser.
             var realtimePrice = 150m;
 
             var stockQuantity = 0;
@@ -50,19 +50,22 @@ namespace StockBuddy.Domain.Services.Impl
             var originalTradeValue = _stockPositionCalculator.CalculateMarketValue(quantity, tradePrice);
             var currentTradeValue = _stockPositionCalculator.CalculateMarketValue(quantity, realtimePrice);
             var stockValueInDeposit = (isBuy ? currentTradeValue : -currentTradeValue);
-            var depositPositions = _stockPositionCalculator.GetPositions(deposit).ToArray();
+            var depositPositions = _stockPositionCalculator.GetStockPositions(deposit).ToArray();
 
             if (depositPositions.Any())
             {
+                //TODO: Use real price when the system supports up-to-date prices.
+                var fakePrice = 200;
+
                 var existingPosition = depositPositions.SingleOrDefault(p => p.StockId == stockId);
 
                 if (existingPosition != null)
                 {
                     stockQuantity = existingPosition.Quantity;
-                    stockValueInDeposit += existingPosition.Value;
+                    stockValueInDeposit += _stockPositionCalculator.CalculateMarketValue(existingPosition.Quantity, fakePrice); //existingPosition.Value;
                 }
 
-                depositValue += depositPositions.Sum(p => p.Value);
+                depositValue += depositPositions.Sum(p => _stockPositionCalculator.CalculateMarketValue(p.Quantity, fakePrice));// p.Value);
             }
 
             // Ved køb skal værdien på den nye handel lægges til den eksisterende værdi fordi vi er interesserede i

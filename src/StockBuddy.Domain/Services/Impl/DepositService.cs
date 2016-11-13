@@ -97,11 +97,10 @@ namespace StockBuddy.Domain.Services.Impl
 
         private DepositInfoDTO GetDepositInfo(Deposit deposit)
         {
-            var sellableStockIds = _stockPositionCalculator
-                .GetStockHoldings(deposit)
-                .Select(p => p.StockId).ToArray();
+            var stockPositions = _stockPositionCalculator.GetStockPositions(deposit).ToArray();
+            var sellableStockIds = stockPositions.Select(p => p.StockId).ToArray();
 
-            return new DepositInfoDTO(deposit, sellableStockIds);
+            return new DepositInfoDTO(deposit, sellableStockIds, stockPositions);
         }
 
         public YearlyReportDTO GetYearlyReport(int year, bool isMarried, Deposit deposit)

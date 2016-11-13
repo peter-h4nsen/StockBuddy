@@ -16,8 +16,8 @@ namespace StockBuddy.Client.Shared.ViewModels
             _viewService = viewService;
 
             CreateTradeCommand = new RelayCommand(() => NavigateToTradeEditor(Deposit, null, null));
-            CreateBuyTradeCommand = new ParameterizedRelayCommand<TradeViewModel>(t => NavigateToTradeEditor(Deposit, true, t.Stock.Id));
-            CreateSellTradeCommand = new ParameterizedRelayCommand<TradeViewModel>(t => NavigateToTradeEditor(Deposit, false, t.Stock.Id));
+            CreateBuyTradeCommand = new ParameterizedRelayCommand<StockPositionViewModel>(t => NavigateToTradeEditor(Deposit, true, t.Stock.Id));
+            CreateSellTradeCommand = new ParameterizedRelayCommand<StockPositionViewModel>(t => NavigateToTradeEditor(Deposit, false, t.Stock.Id));
             NavigateToDividendManagementCommand = new RelayCommand(() => _viewService.NavigateTo(typeof(DividendManagementViewModel), Deposit));
             NavigateToTaxInfoCommand = new RelayCommand(() => _viewService.NavigateTo(typeof(YearlyReportViewModel), Deposit));
 
@@ -36,8 +36,8 @@ namespace StockBuddy.Client.Shared.ViewModels
         }
 
         public RelayCommand CreateTradeCommand { get; }
-        public ParameterizedRelayCommand<TradeViewModel> CreateBuyTradeCommand { get; }
-        public ParameterizedRelayCommand<TradeViewModel> CreateSellTradeCommand { get; }
+        public ParameterizedRelayCommand<StockPositionViewModel> CreateBuyTradeCommand { get; }
+        public ParameterizedRelayCommand<StockPositionViewModel> CreateSellTradeCommand { get; }
         public RelayCommand NavigateToDividendManagementCommand { get; }
         public RelayCommand NavigateToTaxInfoCommand { get; }
 

@@ -56,9 +56,8 @@
     <Compile Include="Entities\Enums.cs" />
     <Compile Include="Entities\GeneralMeeting.cs" />
     <Compile Include="Entities\HistoricalStockInfo.cs" />
-    <Compile Include="Entities\Position.cs" />
+    <Compile Include="Entities\StockPosition.cs" />
     <Compile Include="Entities\Stock.cs" />
-    <Compile Include="Entities\StockHolding.cs" />
     <Compile Include="Entities\StockSplit.cs" />
     <Compile Include="Entities\Trade.cs" />
     <Compile Include="Factories\IUnitOfWorkFactory.cs" />

@@ -17,8 +17,8 @@ namespace StockBuddy.Domain.Entities
             Close = close;
         }
 
-        public string Symbol { get; private set; }
-        public DateTime Date { get; private set; }
-        public decimal Close { get; private set; }
+        public string Symbol { get; }
+        public DateTime Date { get; }
+        public decimal Close { get; }
     }
 }
