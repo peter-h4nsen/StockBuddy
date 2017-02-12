@@ -193,7 +193,7 @@ namespace StockBuddy.Client.Shared.ViewModels
         {
             if (Trade.IsStockDefined)
             {
-                TradeInfo = _tradeGateway.GetTradeInfo(Trade, Deposit);
+                TradeInfo = _tradeGateway.GetTradeInfo(Trade, Deposit.Id);
             }
         }
 
@@ -250,7 +250,7 @@ namespace StockBuddy.Client.Shared.ViewModels
 
             Trade.CommitChanges();
 
-            _sharedDataProvider.RefreshDepositTradeAdded(Deposit, Trade);
+            _sharedDataProvider.RefreshDepositTradeAdded(Deposit, Trade.Id);
 
             _viewService.NavigateTo(typeof(DepositOverviewViewModel));
             CleanUp(false);

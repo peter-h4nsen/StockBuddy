@@ -49,7 +49,7 @@ namespace StockBuddy.Client.TestApp
                 var deposit = depositService.GetAll().Select(p => p.Deposit).Single(p => p.Id == 1);
 
 
-                depositService.GetYearlyReport(2015, false, deposit);
+                depositService.GetYearlyReport(2015, false, 1);
 
                 //var stockService = new StockService(uowFactory);
                 //var generalMeetings = stockService.GetAllGeneralMeetings();

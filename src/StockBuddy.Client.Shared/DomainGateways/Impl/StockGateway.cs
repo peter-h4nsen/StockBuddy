@@ -115,5 +115,10 @@ namespace StockBuddy.Client.Shared.DomainGateways.Impl
             var generalMeetings = _stockService.GetAllGeneralMeetings();
             return _modelToViewModelMapper.MapToGeneralMeetingViewModels(generalMeetings);
         }
+
+        public void Test()
+        {
+            _stockService.TestStockInfoRetrieval();
+        }
     }
 }

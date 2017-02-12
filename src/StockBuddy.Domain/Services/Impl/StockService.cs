@@ -13,12 +13,14 @@ namespace StockBuddy.Domain.Services.Impl
     public sealed class StockService : IStockService
     {
         private readonly IUnitOfWorkFactory _uowFactory;
+        private readonly IStockInfoRetrieverRepository _stockInfoRetrieverRepository;
 
-        public StockService(IUnitOfWorkFactory uowFactory)
+        public StockService(IUnitOfWorkFactory uowFactory, IStockInfoRetrieverRepository stockInfoRetrieverRepository)
         {
-            Guard.AgainstNull(() => uowFactory);
+            Guard.AgainstNull(() => uowFactory, () => stockInfoRetrieverRepository);
 
             _uowFactory = uowFactory;
+            _stockInfoRetrieverRepository = stockInfoRetrieverRepository;
         }
 
         public Stock CreateStock(Stock stock)
@@ -160,6 +162,15 @@ namespace StockBuddy.Domain.Services.Impl
             {
                 return uow.RepoOf<GeneralMeeting>().GetAll();
             }
+        }
+
+        public async void TestStockInfoRetrieval()
+        {
+
+
+            var a = await _stockInfoRetrieverRepository.GetHistoricalStockInfo("GEN.CO", new DateTime(2017, 2, 5), new DateTime(2017, 2, 12));
+
+            Console.WriteLine(a);
         }
     }
 }

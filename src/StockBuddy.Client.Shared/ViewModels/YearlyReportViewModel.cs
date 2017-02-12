@@ -136,7 +136,7 @@ namespace StockBuddy.Client.Shared.ViewModels
             if (SelectedYear == null)
                 return;
 
-            var yearlyReport = _depositGateway.GetYearlyReport(SelectedYear.Value, IsMarried, Deposit);
+            var yearlyReport = _depositGateway.GetYearlyReport(SelectedYear.Value, IsMarried, Deposit.Id);
             
             _stockGroups.Refill(yearlyReport.StockGroups.Select(p => new YearlyReportStockGroupViewModel(p)));
             _dividends.Refill(yearlyReport.Dividends);

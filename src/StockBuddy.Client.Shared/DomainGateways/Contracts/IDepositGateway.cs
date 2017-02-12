@@ -12,14 +12,14 @@ namespace StockBuddy.Client.Shared.DomainGateways.Contracts
         void Delete(int depositId);
 
         IEnumerable<DepositViewModel> GetAll();
-        DepositViewModel Refresh(DepositViewModel depositVm, TradeViewModel tradeVm);
+        DepositViewModel Refresh(int depositId);
 
         IEnumerable<DividendViewModel> CalculateDividends(
-            int year, DepositViewModel depositVm, IEnumerable<GeneralMeetingViewModel> generalMeetingVms);
+            int year, DepositViewModel depositVm);
 
         void CreateDividend(DividendViewModel dividendVm);
         void DeleteDividend(int dividendId);
 
-        YearlyReportDTO GetYearlyReport(int year, bool isMarried, DepositViewModel depositVm);
+        YearlyReportDTO GetYearlyReport(int year, bool isMarried, int depositId);
     }
 }

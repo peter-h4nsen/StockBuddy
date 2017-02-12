@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caching\Impl\CacheManager.cs" />
     <Compile Include="DTO\DepositInfoDTO.cs" />
     <Compile Include="DTO\TradeInfoDto.cs" />
     <Compile Include="DTO\YearlyReport\YearlyReportDividendDTO.cs" />
