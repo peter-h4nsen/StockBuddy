@@ -13,8 +13,8 @@ namespace StockBuddy.Domain.Services.Contracts
         void DeleteDeposit(int depositId);
         
         IEnumerable<DepositInfoDTO> GetAll();
-        DepositInfoDTO Refresh(Deposit deposit, Trade trade);
+        DepositInfoDTO Get(int depositId);
 
-        YearlyReportDTO GetYearlyReport(int year, bool isMarried, Deposit deposit);
+        YearlyReportDTO GetYearlyReport(int year, bool isMarried, int depositId);
     }
 }

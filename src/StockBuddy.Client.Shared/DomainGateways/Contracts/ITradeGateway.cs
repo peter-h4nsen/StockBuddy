@@ -8,6 +8,6 @@ namespace StockBuddy.Client.Shared.DomainGateways.Contracts
     {
         void Create(TradeViewModel tradeVm);
         //int[] GetSellableStocks(DepositViewModel depositVm);
-        TradeInfoDto GetTradeInfo(TradeViewModel trade, DepositViewModel deposit);
+        TradeInfoDto GetTradeInfo(TradeViewModel trade, int depositId);
     }
 }

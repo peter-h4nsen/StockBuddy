@@ -96,7 +96,7 @@ namespace StockBuddy.Client.Shared.ViewModels
                 return;
 
             var dividends = 
-                _depositGateway.CalculateDividends(SelectedYear.Value, Deposit, SharedDataProvider.GeneralMeetings);
+                _depositGateway.CalculateDividends(SelectedYear.Value, Deposit);
 
             CalculatedDividends.Clear();
 

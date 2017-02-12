@@ -26,7 +26,6 @@ namespace StockBuddy.DataAccess.Db.Repositories
             _dbSet = _dbContext.Set<T>();
         }
 
-        //Hmm henter alt data fra tabellen. Skal måske væk?
         public IEnumerable<T> GetAll(params Expression<Func<T, object>>[] includePaths)
         {
             IQueryable<T> dbSet = _dbSet;

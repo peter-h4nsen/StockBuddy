@@ -30,17 +30,16 @@ namespace StockBuddy.Client.Shared.DomainGateways.Impl
             tradeVm.Id = trade.Id;
         }
 
-        public TradeInfoDto GetTradeInfo(TradeViewModel tradeVm, DepositViewModel depositVm)
+        public TradeInfoDto GetTradeInfo(TradeViewModel tradeVm, int depositId)
         {
-            Guard.AgainstNull(() => tradeVm, () => depositVm);
+            Guard.AgainstNull(() => tradeVm);
 
             var isBuy = tradeVm.IsBuy == true;
             var price = tradeVm.Price ?? 0;
             var quantity = tradeVm.Quantity ?? 0;
             var stockId = tradeVm.Stock.Id;
-            var deposit = _viewModelToModelMapper.MapToDeposit(depositVm);
 
-            return _tradeService.CalculateTradeInfo(isBuy, price, quantity, stockId, deposit);
+            return _tradeService.CalculateTradeInfo(isBuy, price, quantity, stockId, depositId);
         }
     }
 }

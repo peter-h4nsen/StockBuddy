@@ -8,6 +8,7 @@ using StockBuddy.Client.Shared.Bootstrapping;
 using StockBuddy.Client.Shared.ViewModels;
 using StockBuddy.Client.Wpf.Services;
 using StockBuddy.Client.Wpf.Views;
+using System.Threading.Tasks;
 
 namespace StockBuddy.Client.Wpf
 {
@@ -31,17 +32,20 @@ namespace StockBuddy.Client.Wpf
 
             var rootWindow = new HostWindow();
             var viewService = new HostWindowViewService(rootWindow);
-            rootWindow.DataContext = new HostViewModel(viewService);
 
-            new AppBootstrapper(
+            HostViewModel hostViewModel = new AppBootstrapper(
                 viewService,
                 dbSettings.ConnectionString,
                 dbSettings.ProviderName
             ).Run();
 
+            rootWindow.DataContext = hostViewModel;
+
             viewService.SetGlobalButtons(GetGlobalButtons());
             viewService.NavigateTo(typeof(DepositManagementViewModel));
             rootWindow.Show();
+
+            hostViewModel.OnAppStarted();
         }
 
         private IEnumerable<GlobalButtonViewModel> GetGlobalButtons()

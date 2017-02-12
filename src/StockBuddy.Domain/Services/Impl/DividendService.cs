@@ -7,6 +7,7 @@ using StockBuddy.Domain.Entities;
 using StockBuddy.Domain.Services.Contracts;
 using StockBuddy.Shared.Utilities;
 using StockBuddy.Domain.Factories;
+using StockBuddy.Domain.Repositories;
 
 namespace StockBuddy.Domain.Services.Impl
 {
@@ -23,11 +24,22 @@ namespace StockBuddy.Domain.Services.Impl
             _uowFactory = uowFactory;
         }
 
-        public IEnumerable<Dividend> CalculateDividends(int year, Deposit deposit, IEnumerable<GeneralMeeting> generalMeetings)
+        public IEnumerable<Dividend> CalculateDividends(int year, int depositId)
         {
-            Guard.AgainstNull(() => deposit, () => generalMeetings);
+            Deposit deposit = null;
+            IEnumerable<GeneralMeeting> generalMeetings = null;
 
-            var generalMeetingsInYear = 
+            using (var uow = _uowFactory.Create())
+            {
+                deposit = uow.Repo<IDepositRepository>().GetByIdWithIncludes(depositId);
+
+                if (deposit.Trades.Count == 0)
+                    yield break;
+
+                generalMeetings = uow.RepoOf<GeneralMeeting>().GetAll(p => p.Stock);
+            }
+
+            var generalMeetingsInYear =
                 generalMeetings.Where(p => p.MeetingDate.Year == year && p.DividendRate > 0);
 
             foreach (var generalMeeting in generalMeetingsInYear)

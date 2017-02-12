@@ -6,7 +6,7 @@ namespace StockBuddy.Domain.Services.Contracts
 {
     public interface IDividendService
     {
-        IEnumerable<Dividend> CalculateDividends(int year, Deposit deposit, IEnumerable<GeneralMeeting> generalMeetings);
+        IEnumerable<Dividend> CalculateDividends(int year, int depositId);
 
         Dividend CreateDividend(Dividend dividend);
         void DeleteDividend(int dividendId);

@@ -9,6 +9,7 @@ namespace StockBuddy.Domain.Services.Contracts
     {
         Trade CreateTrade(Trade trade);
         //IEnumerable<int> GetSellableStocks(Deposit deposit);
-        TradeInfoDto CalculateTradeInfo(bool isBuy, decimal tradePrice, int quantity, int stockId, Deposit deposit);
+        
+        TradeInfoDto CalculateTradeInfo(bool isBuy, decimal tradePrice, int quantity, int stockId, int depositId);
     }
 }

@@ -8,62 +8,11 @@ namespace StockBuddy.Client.Shared.DomainGateways.Mapping
 {
     public sealed class ViewModelToModelMapper
     {
-        public Deposit MapToDeposit(DepositViewModel depositVm, bool mapRelations = true)
-        {
-            var deposit = GetDeposit(depositVm);
-
-            if (mapRelations)
-            {
-                if (depositVm.Trades != null)
-                {
-                    foreach (var tradeVm in depositVm.Trades)
-                    {
-                        var trade = GetTrade(tradeVm);
-                        deposit.AddTrade(trade);
-                    }
-                }
-
-                if (depositVm.Dividends != null)
-                {
-                    foreach (var dividendVm in depositVm.Dividends)
-                    {
-                        var dividend = GetDividend(dividendVm);
-                        deposit.AddDividend(dividend);
-                    }
-                }
-            }
-
-            return deposit;
-        }
-
-        public Trade MapToTrade(TradeViewModel tradeVm)
-        {
-            var trade = GetTrade(tradeVm);
-            return trade;
-        }
-
-        public Stock MapToStock(StockViewModel stockVm)
-        {
-            var stock = GetStock(stockVm);
-            return stock;
-        }
-
-        public StockSplit MapToStockSplit(StockSplitViewModel stockSplitVm)
-        {
-            var stockSplit = GetStockSplit(stockSplitVm, false);
-            return stockSplit;
-        }
-
-        public GeneralMeeting MapToGeneralMeeting(GeneralMeetingViewModel generalMeetingVm)
-        {
-            return GetGeneralMeeting(generalMeetingVm);
-        }
-
-        public IEnumerable<GeneralMeeting> MapToGeneralMeetings(IEnumerable<GeneralMeetingViewModel> vms)
-        {
-            return vms.Select(GetGeneralMeeting);
-        }
-
+        public Deposit MapToDeposit(DepositViewModel depositVm) => GetDeposit(depositVm);
+        public Trade MapToTrade(TradeViewModel tradeVm) => GetTrade(tradeVm);
+        public Stock MapToStock(StockViewModel stockVm) => GetStock(stockVm);
+        public StockSplit MapToStockSplit(StockSplitViewModel stockSplitVm) => GetStockSplit(stockSplitVm, false);
+        public GeneralMeeting MapToGeneralMeeting(GeneralMeetingViewModel generalMeetingVm) => GetGeneralMeeting(generalMeetingVm);
         public Dividend MapToDividend(DividendViewModel dividendVm) => GetDividend(dividendVm);
         
         private Deposit GetDeposit(DepositViewModel depositVm)

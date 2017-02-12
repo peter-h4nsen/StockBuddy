@@ -38,9 +38,14 @@ namespace StockBuddy.Domain.Services.Impl
             }
         }
 
-        public TradeInfoDto CalculateTradeInfo(bool isBuy, decimal tradePrice, int quantity, int stockId, Deposit deposit)
+        public TradeInfoDto CalculateTradeInfo(bool isBuy, decimal tradePrice, int quantity, int stockId, int depositId)
         {
-            Guard.AgainstNull(() => deposit);
+            Deposit deposit = null;
+
+            using (var uow = _uowFactory.Create())
+            {
+                deposit = uow.Repo<IDepositRepository>().GetByIdWithIncludes(depositId);
+            }
 
             //TODO: Modtag som parameter når vi har realtime-kurser.
             var realtimePrice = 150m;

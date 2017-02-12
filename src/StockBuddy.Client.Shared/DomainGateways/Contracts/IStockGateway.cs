@@ -21,5 +21,7 @@ namespace StockBuddy.Client.Shared.DomainGateways.Contracts
         void UpdateGeneralMeeting(GeneralMeetingViewModel generalMeetingVm);
         void DeleteGeneralMeeting(int generalMeetingId);
         IEnumerable<GeneralMeetingViewModel> GetAllGeneralMeetings();
+
+        void Test();
     }
 }

@@ -7,6 +7,9 @@ using StockBuddy.Client.Shared.Services.Contracts;
 using StockBuddy.Shared.Utilities;
 using StockBuddy.Shared.Utilities.AppSettings;
 using StockBuddy.Domain.Settings;
+using StockBuddy.DataAccess.Webservices.YahooFinance;
+using StockBuddy.Domain.Repositories;
+using StockBuddy.Client.Shared.ViewModels;
 
 namespace StockBuddy.Client.Shared.Bootstrapping
 {
@@ -25,7 +28,7 @@ namespace StockBuddy.Client.Shared.Bootstrapping
             _providerName = providerName;
         }
 
-        public void Run()
+        public HostViewModel Run()
         {
             var container = CreateContainer();
 
@@ -33,6 +36,8 @@ namespace StockBuddy.Client.Shared.Bootstrapping
 
             ViewModelLocator.SetViewModelFactory(container.Resolve);
             GlobalCommands.SetViewService(_viewService);
+
+            return container.Resolve<HostViewModel>();
         }
 
         private IContainer CreateContainer()
@@ -46,6 +51,7 @@ namespace StockBuddy.Client.Shared.Bootstrapping
 
             builder.RegisterType<Messagebus>().As<IMessagebus>().SingleInstance();
             builder.RegisterType<SharedDataProvider>().As<ISharedDataProvider>().SingleInstance();
+            builder.RegisterType<YahooFinanceStockInfoRepository>().As<IStockInfoRetrieverRepository>().SingleInstance();
 
             builder.RegisterInstance(CreateSettingsProvider()).AsImplementedInterfaces().SingleInstance();
 

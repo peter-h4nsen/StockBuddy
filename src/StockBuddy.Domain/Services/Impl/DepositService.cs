@@ -82,17 +82,17 @@ namespace StockBuddy.Domain.Services.Impl
             using (var uow = _uowFactory.Create())
             {
                 return uow.Repo<IDepositRepository>()
-                    .GetAll(p => p.Trades.Select(t => t.Stock),
-                            p => p.Dividends.Select(o => o.GeneralMeeting.Stock))
-                    .Select(GetDepositInfo);
+                    .GetAllWithIncludes().Select(GetDepositInfo);
             }
         }
 
-        // TODO: Skal nok have andet navn. Kaldes når ny handel er oprettet og depotet skal opdateres pga. det.
-        public DepositInfoDTO Refresh(Deposit deposit, Trade trade)
+        public DepositInfoDTO Get(int depositId)
         {
-            deposit.AddTrade(trade);
-            return GetDepositInfo(deposit);
+            using (var uow = _uowFactory.Create())
+            {
+                var deposit = uow.Repo<IDepositRepository>().GetByIdWithIncludes(depositId);
+                return GetDepositInfo(deposit);
+            }
         }
 
         private DepositInfoDTO GetDepositInfo(Deposit deposit)
@@ -103,8 +103,10 @@ namespace StockBuddy.Domain.Services.Impl
             return new DepositInfoDTO(deposit, sellableStockIds, stockPositions);
         }
 
-        public YearlyReportDTO GetYearlyReport(int year, bool isMarried, Deposit deposit)
+        public YearlyReportDTO GetYearlyReport(int year, bool isMarried, int depositId)
         {
+            Deposit deposit = Get(depositId).Deposit;
+
             // Gevinst og tab
             var reportStockGroups = GetReportStockGroups(year, deposit);
 

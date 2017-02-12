@@ -31,7 +31,7 @@ namespace StockBuddy.Client.Shared.DomainGateways.Impl
         {
             Guard.AgainstNull(() => depositVm);
 
-            var deposit = _viewModelToModelMapper.MapToDeposit(depositVm, false);
+            var deposit = _viewModelToModelMapper.MapToDeposit(depositVm);
             _depositService.CreateDeposit(deposit);
             depositVm.Id = deposit.Id;
         }
@@ -40,7 +40,7 @@ namespace StockBuddy.Client.Shared.DomainGateways.Impl
         {
             Guard.AgainstNull(() => depositVm);
 
-            var deposit = _viewModelToModelMapper.MapToDeposit(depositVm, false);
+            var deposit = _viewModelToModelMapper.MapToDeposit(depositVm);
             _depositService.UpdateDeposit(deposit);
         }
 
@@ -57,20 +57,16 @@ namespace StockBuddy.Client.Shared.DomainGateways.Impl
         }
 
         // TODO: Right now called when a new trade is added in the deposit. Should support more cases.
-        public DepositViewModel Refresh(DepositViewModel depositVm, TradeViewModel tradeVm)
+        public DepositViewModel Refresh(int depositId)
         {
-            var deposit = _viewModelToModelMapper.MapToDeposit(depositVm, true);
-            var trade = _viewModelToModelMapper.MapToTrade(tradeVm);
-            var depositInfoDTO = _depositService.Refresh(deposit, trade);
+            var depositInfoDTO = _depositService.Get(depositId);
             return _modelToViewModelMapper.MapToDepositViewModel(depositInfoDTO);
         }
 
         public IEnumerable<DividendViewModel> CalculateDividends(
-            int year, DepositViewModel depositVm, IEnumerable<GeneralMeetingViewModel> generalMeetingVms)
+            int year, DepositViewModel depositVm)
         {
-            var deposit = _viewModelToModelMapper.MapToDeposit(depositVm, true);
-            var generalMeetings = _viewModelToModelMapper.MapToGeneralMeetings(generalMeetingVms);
-            var dividends = _dividendService.CalculateDividends(year, deposit, generalMeetings);
+            var dividends = _dividendService.CalculateDividends(year, depositVm.Id);
 
             return _modelToViewModelMapper.MapToDividendViewModels(dividends)
                 .Select(p => { p.Deposit = depositVm; return p; });
@@ -91,12 +87,9 @@ namespace StockBuddy.Client.Shared.DomainGateways.Impl
             _dividendService.DeleteDividend(dividendId);
         }
 
-        public YearlyReportDTO GetYearlyReport(int year, bool isMarried, DepositViewModel depositVm)
+        public YearlyReportDTO GetYearlyReport(int year, bool isMarried, int depositId)
         {
-            Guard.AgainstNull(() => depositVm);
-
-            var deposit = _viewModelToModelMapper.MapToDeposit(depositVm, true);
-            return _depositService.GetYearlyReport(year, isMarried, deposit);
+            return _depositService.GetYearlyReport(year, isMarried, depositId);
         }
     }
 }

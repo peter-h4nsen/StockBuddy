@@ -19,7 +19,7 @@ namespace StockBuddy.Client.Shared.Services.Contracts
 
         void DeleteDeposit(DepositViewModel deposit);
         void AddDeposit(DepositViewModel deposit);
-        void RefreshDepositTradeAdded(DepositViewModel deposit, TradeViewModel trade);
+        void RefreshDepositTradeAdded(DepositViewModel deposit, int tradeId);
 
         void DeleteGeneralMeeting(GeneralMeetingViewModel generalMeeting);
         void AddGeneralMeeting(GeneralMeetingViewModel generalMeeting);

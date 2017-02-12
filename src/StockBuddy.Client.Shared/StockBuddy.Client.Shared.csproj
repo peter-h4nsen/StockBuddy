@@ -108,6 +108,10 @@
       <Project>{b01dae6d-cc39-4ea4-b2fd-85511448f665}</Project>
       <Name>StockBuddy.DataAccess.Db</Name>
     </ProjectReference>
+    <ProjectReference Include="..\StockBuddy.DataAccess.Webservices\StockBuddy.DataAccess.Webservices.csproj">
+      <Project>{0b3b5a9e-0996-4831-ac0a-d5b8047205b4}</Project>
+      <Name>StockBuddy.DataAccess.Webservices</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StockBuddy.Domain\StockBuddy.Domain.csproj">
       <Project>{e945d4c7-3e6b-4fee-8e8d-c44a4f06c3a4}</Project>
       <Name>StockBuddy.Domain</Name>

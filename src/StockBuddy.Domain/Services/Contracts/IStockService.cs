@@ -21,5 +21,7 @@ namespace StockBuddy.Domain.Services.Contracts
         void UpdateGeneralMeeting(GeneralMeeting generalMeeting);
         void DeleteGeneralMeeting(int generalMeetingId);
         IEnumerable<GeneralMeeting> GetAllGeneralMeetings();
+
+        void TestStockInfoRetrieval();
     }
 }

@@ -68,16 +68,21 @@ namespace StockBuddy.Client.Shared.Services
             Stocks.Add(stock);
         }
 
-        public void RefreshDepositTradeAdded(DepositViewModel depositVm, TradeViewModel tradeVm)
+        public void RefreshDepositTradeAdded(DepositViewModel depositVm, int tradeId)
         {
-            var refreshedDepositVm = _depositGateway.Refresh(depositVm, tradeVm);
-            var refreshedTradeVm = refreshedDepositVm.Trades.Single(p => p.Id == tradeVm.Id);
+            var refreshedDepositVm = _depositGateway.Refresh(depositVm.Id);
+            var refreshedTradeVm = refreshedDepositVm.Trades.Single(p => p.Id == tradeId);
 
             depositVm.SellableStockIds = refreshedDepositVm.SellableStockIds;
             depositVm.Trades.Add(refreshedTradeVm);
 
             var refreshedPosition = refreshedDepositVm.StockPositions.Single(p => p.Stock.Id == refreshedTradeVm.Stock.Id);
-            depositVm.StockPositions.Single(p => p.Stock.Id == refreshedTradeVm.Stock.Id).Quantity = refreshedPosition.Quantity;
+            var existingPosition = depositVm.StockPositions.SingleOrDefault(p => p.Stock.Id == refreshedTradeVm.Stock.Id);
+
+            if (existingPosition != null)
+                existingPosition.Quantity = refreshedPosition.Quantity;
+            else
+                depositVm.StockPositions.Add(refreshedPosition);
 
             // Add new trade to the collection of stocks.
             var stock = Stocks.Single(p => p.Id == refreshedTradeVm.Stock.Id);
