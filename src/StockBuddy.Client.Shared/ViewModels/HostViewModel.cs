@@ -2,6 +2,7 @@
 using StockBuddy.Client.Shared.Services.Contracts;
 using StockBuddy.Shared.Utilities;
 using StockBuddy.Client.Shared.DomainGateways.Contracts;
+using System.Threading.Tasks;
 
 namespace StockBuddy.Client.Shared.ViewModels
 {
@@ -21,7 +22,17 @@ namespace StockBuddy.Client.Shared.ViewModels
 
         public void OnAppStarted()
         {
-            _stockGateway.Test();
+            UpdateHistoricalStockInfo().Forget();
+        }
+
+        private async Task UpdateHistoricalStockInfo()
+        {
+            bool result = await _stockGateway.UpdateHistoricalStockInfo();
+
+            if (!result)
+            {
+                ViewService.DisplayValidationErrors("Error while updating stock prices.");
+            }
         }
     }
 }

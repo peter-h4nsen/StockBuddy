@@ -24,7 +24,7 @@ namespace StockBuddy.Domain.Caching.Impl
 
             foreach (var item in items)
             {
-                dic.TryAdd(item.Id, item);
+                dic.TryAdd(item.ID, item);
             }
         }
 
@@ -40,8 +40,8 @@ namespace StockBuddy.Domain.Caching.Impl
 
         public void Add(Deposit deposit)
         {
-            if (!dic.TryAdd(deposit.Id, deposit))
-                throw new InvalidOperationException($"Item already exists in cache. ID: {deposit.Id}");
+            if (!dic.TryAdd(deposit.ID, deposit))
+                throw new InvalidOperationException($"Item already exists in cache. ID: {deposit.ID}");
         }
 
         public void Remove(int id)

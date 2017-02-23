@@ -12,7 +12,7 @@ namespace StockBuddy.Domain.Entities
 
         public GeneralMeeting(int id, DateTime meetingDate, decimal dividendRate, int stockID, Stock stock)
         {
-            Id = id;
+            ID = id;
             MeetingDate = meetingDate;
             DividendRate = dividendRate;
             StockID = stockID;

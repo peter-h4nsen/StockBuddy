@@ -16,7 +16,7 @@ namespace StockBuddy.Domain.Entities
         {
             Guard.AgainstNull(() => description, () => identityNumber);
 
-            Id = id;
+            ID = id;
             Description = description;
             IdentityNumber = identityNumber;
             DepositType = depositType;

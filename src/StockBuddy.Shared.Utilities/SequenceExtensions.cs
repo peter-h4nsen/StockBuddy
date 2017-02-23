@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StockBuddy.Shared.Utilities
 {
@@ -16,6 +17,14 @@ namespace StockBuddy.Shared.Utilities
 
             foreach (var item in items)
                 collection.Add(item);
+        }
+
+        public static bool AllSame<TItem, TComparer>(
+                this IEnumerable<TItem> items, Func<TItem, TComparer> selectComparer)
+        {
+            TComparer comparer = selectComparer(items.First());
+            bool result = items.All(p => selectComparer(p).Equals(comparer));
+            return result;
         }
     }
 }

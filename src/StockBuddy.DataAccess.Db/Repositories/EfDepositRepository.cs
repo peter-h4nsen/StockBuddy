@@ -8,18 +8,13 @@ using System.Linq.Expressions;
 
 namespace StockBuddy.DataAccess.Db.Repositories
 {
-    public sealed class EfDepositRepository : EfRepository<Deposit>, IDepositRepository
+    internal sealed class EfDepositRepository : EfRepository<Deposit>, IDepositRepository
     {
         private Expression<Func<Deposit, object>>[] includePaths =
         {
             p => p.Trades.Select(t => t.Stock),
             p => p.Dividends.Select(o => o.GeneralMeeting.Stock)
         };
-
-        public EfDepositRepository(StockBuddyDbContext dbContext)
-            : base(dbContext)
-        {  
-        }
 
         public IEnumerable<Deposit> GetAllWithIncludes() => GetAll(includePaths);
 

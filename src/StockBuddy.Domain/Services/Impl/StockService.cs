@@ -7,6 +7,9 @@ using StockBuddy.Domain.Validation;
 using StockBuddy.Domain.Services.Contracts;
 using System.Collections.Generic;
 using StockBuddy.Domain.Repositories;
+using System.Threading.Tasks;
+using StockBuddy.Domain.DTO;
+using System.Diagnostics;
 
 namespace StockBuddy.Domain.Services.Impl
 {
@@ -164,13 +167,110 @@ namespace StockBuddy.Domain.Services.Impl
             }
         }
 
-        public async void TestStockInfoRetrieval()
+        public async Task<bool> UpdateHistoricalStockInfo()
         {
+            using (var uow = _uowFactory.Create())
+            {
+                var defaultStockInfoDate = new DateTime(2010, 1, 1);
+
+                Tuple<int, string, DateTime?>[] stockInfoItems = 
+                    uow.Repo<IStockRepository>().GetStocksWithLastInfoDate();
+
+                var symbolsLookup = 
+                    stockInfoItems
+                    .Where(p => !IsLatestStockInfoDate(p.Item3))
+                    .ToLookup(
+                        p => p.Item2, 
+                        p => new
+                        {
+                            StockId = p.Item1,
+                            LatestStockInfoDate = p.Item3 ?? defaultStockInfoDate
+                        }
+                    );
+
+                if (symbolsLookup.Count == 0)
+                    return true;
+
+                Task<HistoricalStockInfoResult>[] tasks = 
+                    symbolsLookup.Select(symbolGrp =>
+                    {
+                        DateTime latestStockInfoDate = symbolGrp.Min(p => p.LatestStockInfoDate);
+                        DateTime fromDate = latestStockInfoDate.AddDays(1);
+                        DateTime toDate = DateTime.Today.AddDays(1);
+
+                        return _stockInfoRetrieverRepository.GetHistoricalStockInfo(
+                                symbolGrp.Key, fromDate, toDate);
+                    })
+                    .ToArray();
+
+                HistoricalStockInfoResult[] stockInfoResultItems = await Task.WhenAll(tasks).ConfigureAwait(false);
+
+                bool result = true;
+                
+                foreach (var stockInfoResult in stockInfoResultItems)
+                {
+                    if (stockInfoResult.IsSuccess)
+                    {
+                        if (stockInfoResult.StockInfoItems.Length == 0)
+                            continue;
+
+                        string symbol = stockInfoResult.Symbol;
+                        var stocksForSymbol = symbolsLookup[symbol];
+                        bool isSameStockInfoDate = stocksForSymbol.AllSame(p => p.LatestStockInfoDate);
+
+                        foreach (var stock in stocksForSymbol)
+                        {
+                            foreach (var stockInfoItem in stockInfoResult.StockInfoItems)
+                            {
+                                stockInfoItem.StockID = stock.StockId;
+                            }
+
+                            var itemsToInsert = 
+                                isSameStockInfoDate ?
+                                stockInfoResult.StockInfoItems :
+                                stockInfoResult.StockInfoItems.Where(p => p.Date > stock.LatestStockInfoDate);
+                            
+                            uow.RepoOf<HistoricalStockInfo>().BulkInsert(itemsToInsert);
+                            Console.WriteLine(stockInfoResult.Symbol + ": UPDATED!");
+                        }
+                    }
+                    else
+                    {
+                        // TODO: Register error
+                        Console.WriteLine(stockInfoResult.Symbol + ": Failed..!");
+                        result = false;
+                    }
+                }
+
+                //TODO: Return some kind of result 
+                return result;
+            }
+        }
+
+        private bool IsLatestStockInfoDate(DateTime? date)
+        {
+            if (date == null)
+                return false;
+
+            DateTime compareDate = DateTime.Now;
+
+            if (date.Value.Date == compareDate.Date)
+                return true;
+
+            Func<DateTime, bool> isWeekend = 
+                d => d.DayOfWeek == DayOfWeek.Saturday || d.DayOfWeek == DayOfWeek.Sunday;
+
+            DateTime latestDate = compareDate.Date;
+
+            do
+            {
+                latestDate = latestDate.AddDays(-1);
+
+            } while (isWeekend(latestDate));
 
 
-            var a = await _stockInfoRetrieverRepository.GetHistoricalStockInfo("GEN.CO", new DateTime(2017, 2, 5), new DateTime(2017, 2, 12));
-
-            Console.WriteLine(a);
+            var result = date.Value.Date == latestDate.Date;
+            return result;
         }
     }
 }

@@ -7,7 +7,7 @@ namespace StockBuddy.DataAccess.Db.Configuration
     /// Use this class if you don't want to configure anything about EF in the config-file.
     /// When placed in the same assembly as the DbContext it will be used automatically.
     /// </summary>
-    public class DefaultDbConfig : DbConfiguration
+    internal class DefaultDbConfig : DbConfiguration
     {
         public DefaultDbConfig()
         {

@@ -18,7 +18,7 @@ namespace StockBuddy.Domain.Entities
         {
             Guard.AgainstNull(() => name, () => symbol, () => isin);
 
-            Id = id;
+            ID = id;
             Name = name;
             Symbol = symbol;
             Isin = isin;

@@ -5,6 +5,8 @@ using StockBuddy.Domain.Entities;
 using StockBuddy.Domain.Repositories;
 using StockBuddy.Shared.Utilities;
 using StockBuddy.DataAccess.Db.Repositories;
+using System.Reflection;
+using System.Data.Entity;
 
 namespace StockBuddy.DataAccess.Db.Factories
 {
@@ -28,7 +30,8 @@ namespace StockBuddy.DataAccess.Db.Factories
         /// Typen skal være interfacetypen på det repo det skal genereres.
         /// Hvis typen er f.eks. IStockRepository ledes efter typen EfStockRepository og en instans returneres.
         /// </summary>
-        internal T CreateSpecialRepository<T>(StockBuddyDbContext dbContext) where T : class
+        internal T CreateSpecialRepository<T>(
+                StockBuddyDbContext dbContext, DbContextTransaction transaction) where T : class
         {
             Guard.AgainstNull(() => dbContext);
 
@@ -68,15 +71,40 @@ namespace StockBuddy.DataAccess.Db.Factories
                     $"Can't create repository. {repoName} is not a {repoInterfaceName}.");
             }
 
-            return (T)Activator.CreateInstance(repoType, dbContext);
+            T repository = (T)Activator.CreateInstance(repoType);
+            SetRepositoryDependencies(repository, dbContext, transaction);
+            return repository;
         }
 
-        internal IRepository<T> CreateDefaultRepository<T>(StockBuddyDbContext dbContext) where T : Entity
+        internal IRepository<T> CreateDefaultRepository<T>(
+                StockBuddyDbContext dbContext, DbContextTransaction transaction) where T : Entity
         {
             if (dbContext == null)
                 throw new ArgumentNullException("dbContext");
 
-            return new EfRepository<T>(dbContext);
+            var repository = new EfRepository<T>();
+            SetRepositoryDependencies(repository, dbContext, transaction);
+            return repository;
+        }
+
+        private void SetRepositoryDependencies(
+                object repository, StockBuddyDbContext dbContext, DbContextTransaction transaction)
+        {
+            var method = 
+                GetMethod(repository.GetType()) ?? 
+                GetMethod(repository.GetType().BaseType);
+
+            if (method == null)
+                throw new InvalidOperationException("Could not set dependencies on repository");
+
+            method.Invoke(repository, new object[] { dbContext, transaction });
+        }
+
+        private MethodInfo GetMethod(Type repositoryType)
+        {
+            return repositoryType.GetMethod(
+                "Initialize", 
+                BindingFlags.NonPublic | BindingFlags.Instance);
         }
     }
 }

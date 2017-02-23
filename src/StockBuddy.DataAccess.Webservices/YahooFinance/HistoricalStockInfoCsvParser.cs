@@ -58,7 +58,7 @@ namespace StockBuddy.DataAccess.Webservices.YahooFinance
             if (!decimal.TryParse(closeString, NumberStyles.Number, CultureInfo.InvariantCulture, out close))
                 throw new Exception($"Couldn't parse value to a decimal. Value: {closeString}.");
 
-            return new HistoricalStockInfo(symbol, date, close);
+            return new HistoricalStockInfo(symbol, date, close, 0); //TODO: Fix
         }
 
         private int FindColumnIndex(string[] columns, string name)

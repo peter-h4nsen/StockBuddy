@@ -46,7 +46,7 @@ namespace StockBuddy.Client.TestApp
 
                 var s = new StockPositionCalculator();
                 var depositService = new DepositService(uowFactory, s, null);
-                var deposit = depositService.GetAll().Select(p => p.Deposit).Single(p => p.Id == 1);
+                var deposit = depositService.GetAll().Select(p => p.Deposit).Single(p => p.ID == 1);
 
 
                 depositService.GetYearlyReport(2015, false, 1);

@@ -13,7 +13,7 @@ namespace StockBuddy.Domain.Entities
         public StockSplit(int id, DateTime date, int oldStockID, int newStockID, 
             int ratioFrom, int ratioTo, Stock oldStock, Stock newStock)
         {
-            Id = id;
+            ID = id;
             Date = date;
             OldStockID = oldStockID;
             NewStockID = newStockID;

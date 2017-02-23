@@ -6,6 +6,7 @@ using StockBuddy.Client.Shared.ViewModels;
 using StockBuddy.Domain.Services.Contracts;
 using StockBuddy.Shared.Utilities;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace StockBuddy.Client.Shared.DomainGateways.Impl
 {
@@ -21,6 +22,7 @@ namespace StockBuddy.Client.Shared.DomainGateways.Impl
             GatewayCache cache)
         {
             Guard.AgainstNull(() => stockService, () => modelToViewModelMapper, () => viewModelToModelMapper, () => cache);
+
             _stockService = stockService;
             _modelToViewModelMapper = modelToViewModelMapper;
             _viewModelToModelMapper = viewModelToModelMapper;
@@ -33,7 +35,7 @@ namespace StockBuddy.Client.Shared.DomainGateways.Impl
 
             var stock = _viewModelToModelMapper.MapToStock(stockVm);
             _stockService.CreateStock(stock);
-            stockVm.Id = stock.Id;
+            stockVm.Id = stock.ID;
         }
 
         public void Update(StockViewModel stockVm)
@@ -66,7 +68,7 @@ namespace StockBuddy.Client.Shared.DomainGateways.Impl
 
             var stockSplit = _viewModelToModelMapper.MapToStockSplit(stockSplitVm);
             _stockService.CreateStockSplit(stockSplit);
-            stockSplitVm.Id = stockSplit.Id;
+            stockSplitVm.Id = stockSplit.ID;
         }
 
         public void UpdateStockSplit(StockSplitViewModel stockSplitVm)
@@ -94,7 +96,7 @@ namespace StockBuddy.Client.Shared.DomainGateways.Impl
 
             var generalMeeting = _viewModelToModelMapper.MapToGeneralMeeting(vm);
             _stockService.CreateGeneralMeeting(generalMeeting);
-            vm.Id = generalMeeting.Id;
+            vm.Id = generalMeeting.ID;
         }
 
         public void UpdateGeneralMeeting(GeneralMeetingViewModel vm)
@@ -116,9 +118,9 @@ namespace StockBuddy.Client.Shared.DomainGateways.Impl
             return _modelToViewModelMapper.MapToGeneralMeetingViewModels(generalMeetings);
         }
 
-        public void Test()
+        public Task<bool> UpdateHistoricalStockInfo()
         {
-            _stockService.TestStockInfoRetrieval();
+            return _stockService.UpdateHistoricalStockInfo();
         }
     }
 }

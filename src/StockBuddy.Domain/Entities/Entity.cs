@@ -4,7 +4,7 @@ namespace StockBuddy.Domain.Entities
 {
     public abstract class Entity : IEquatable<Entity>
     {
-        public int Id { get; protected set; }
+        public int ID { get; protected set; }
 
         public bool Equals(Entity other)
         {
@@ -14,7 +14,7 @@ namespace StockBuddy.Domain.Entities
             if (GetType() != other.GetType())
                 return false;
 
-            return Id == other.Id;
+            return ID == other.ID;
         }
 
         public override bool Equals(object obj)
@@ -24,7 +24,7 @@ namespace StockBuddy.Domain.Entities
 
         public override int GetHashCode()
         {
-            return Id.GetHashCode();
+            return ID.GetHashCode();
         }
 
         public static bool operator ==(Entity first, Entity second)

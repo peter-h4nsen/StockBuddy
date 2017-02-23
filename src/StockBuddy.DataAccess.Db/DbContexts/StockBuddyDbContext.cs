@@ -8,14 +8,14 @@ using System.Data.Entity.ModelConfiguration;
 using System.Reflection;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Core.Metadata.Edm;
+using System.Data.Entity.Core.Mapping;
 
 namespace StockBuddy.DataAccess.Db.DbContexts
 {
     [DbConfigurationType(typeof(DefaultDbConfig))]
-    public sealed class StockBuddyDbContext : DbContext
+    internal sealed class StockBuddyDbContext : DbContext
     {
-        public IDbSet<Trade> Trades { get { return Set<Trade>(); } }
-
         static StockBuddyDbContext()
         {
             Database.SetInitializer<StockBuddyDbContext>(null);
@@ -41,6 +41,59 @@ namespace StockBuddy.DataAccess.Db.DbContexts
         public ObjectContext ObjectContext
         {
             get { return ((IObjectContextAdapter)this).ObjectContext; }
+        }
+
+        public string GetTableName(Type type)
+        {
+            var tableEntitySet = GetMappingFragment(type).StoreEntitySet;
+
+            var tableName =
+                (string)tableEntitySet.MetadataProperties["Table"].Value ??
+                tableEntitySet.Name;
+
+            return tableName;
+        }
+
+        public Tuple<string, string, Type>[] GetColumnMappings(Type type)
+        {
+            var propertyMappings = GetMappingFragment(type).PropertyMappings;
+
+            var columnMappings =
+                propertyMappings.OfType<ScalarPropertyMapping>()
+                .Select(p => Tuple.Create
+                (
+                    p.Property.Name,
+                    p.Column.Name,
+                    p.Column.PrimitiveType.ClrEquivalentType)
+                )
+                .ToArray();
+
+            return columnMappings;
+        }
+
+        private MappingFragment GetMappingFragment(Type type)
+        {
+            var metaData = ObjectContext.MetadataWorkspace;
+
+            var objectItemCollection = ((ObjectItemCollection)metaData.GetItemCollection(DataSpace.OSpace));
+
+            var entityType =
+                metaData.GetItems<EntityType>(DataSpace.OSpace)
+                .Single(e => objectItemCollection.GetClrType(e) == type);
+
+            var entitySet =
+                metaData.GetItems<EntityContainer>(DataSpace.CSpace).Single()
+                .EntitySets.Single(s => s.ElementType.Name == entityType.Name);
+
+            var mapping =
+                metaData.GetItems<EntityContainerMapping>(DataSpace.CSSpace).Single()
+                .EntitySetMappings.Single(s => s.EntitySet == entitySet);
+
+            var mappingFragment =
+                mapping.EntityTypeMappings.Single()
+                .Fragments.Single();
+
+            return mappingFragment;
         }
 
         /// <summary>

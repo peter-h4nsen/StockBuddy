@@ -20,5 +20,7 @@ namespace StockBuddy.Domain.Repositories
         void Delete(int id);
         void Delete(T entity);
         void BatchDelete(Expression<Func<T, bool>> filter);
+
+        void BulkInsert(IEnumerable<T> entities, int batchSize = 0);
     }
 }
