@@ -16,7 +16,7 @@ namespace StockBuddy.Domain.Services.Impl
 
             var quantity = 
                 deposit.Trades
-                .Where(p => p.TradeDate.Date <= date.Date && p.Stock.Splitted.Id == stockId)
+                .Where(p => p.TradeDate.Date <= date.Date && p.Stock.Splitted.ID == stockId)
                 .Sum(t => t.QuantitySignedSplitted(date));
 
             return new StockPosition(stockId, quantity);
@@ -26,7 +26,7 @@ namespace StockBuddy.Domain.Services.Impl
         {
             var stockPositions =
                 from trade in deposit.Trades
-                group trade by trade.Stock.Splitted.Id into g
+                group trade by trade.Stock.Splitted.ID into g
                 let quantity = g.Sum(t => t.QuantitySignedSplitted())
                 where quantity > 0
                 select new StockPosition(g.Key, quantity);

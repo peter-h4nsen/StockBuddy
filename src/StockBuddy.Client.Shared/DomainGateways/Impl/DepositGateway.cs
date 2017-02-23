@@ -33,7 +33,7 @@ namespace StockBuddy.Client.Shared.DomainGateways.Impl
 
             var deposit = _viewModelToModelMapper.MapToDeposit(depositVm);
             _depositService.CreateDeposit(deposit);
-            depositVm.Id = deposit.Id;
+            depositVm.Id = deposit.ID;
         }
 
         public void Update(DepositViewModel depositVm)
@@ -78,7 +78,7 @@ namespace StockBuddy.Client.Shared.DomainGateways.Impl
 
             var dividend = _viewModelToModelMapper.MapToDividend(dividendVm);
             _dividendService.CreateDividend(dividend);
-            dividendVm.Id = dividend.Id;
+            dividendVm.Id = dividend.ID;
             dividendVm.IsCreated = true;
         }
 

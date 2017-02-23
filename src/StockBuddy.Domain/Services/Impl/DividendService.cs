@@ -45,13 +45,13 @@ namespace StockBuddy.Domain.Services.Impl
             foreach (var generalMeeting in generalMeetingsInYear)
             {
                 var position = _stockPositionCalculator.GetStockPosition(
-                    deposit, generalMeeting.Stock.Splitted.Id, generalMeeting.MeetingDate);
+                    deposit, generalMeeting.Stock.Splitted.ID, generalMeeting.MeetingDate);
 
                 var quantity = position.Quantity;
 
                 if (quantity > 0)
                 {
-                    var createdDividend = deposit.GetDividendForGeneralMeeting(generalMeeting.Id);
+                    var createdDividend = deposit.GetDividendForGeneralMeeting(generalMeeting.ID);
 
                     bool isCreated = false;
                     bool isDifferent = false;
@@ -62,7 +62,7 @@ namespace StockBuddy.Domain.Services.Impl
                         isDifferent = createdDividend.Quantity != quantity;
                     }
 
-                    var dividend = new Dividend(0, quantity, generalMeeting.Id, deposit.Id, generalMeeting, isCreated, isDifferent);
+                    var dividend = new Dividend(0, quantity, generalMeeting.ID, deposit.ID, generalMeeting, isCreated, isDifferent);
                     yield return dividend;
                 }
             }

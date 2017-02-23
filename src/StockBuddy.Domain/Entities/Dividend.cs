@@ -11,7 +11,7 @@ namespace StockBuddy.Domain.Entities
 
         public Dividend(int id, int quantity, int generalMeetingID, int depositID, GeneralMeeting generalMeeting, bool isCreated, bool isDifferent)
         {
-            Id = id;
+            ID = id;
             Quantity = quantity;
             GeneralMeetingID = generalMeetingID;
             DepositID = depositID;

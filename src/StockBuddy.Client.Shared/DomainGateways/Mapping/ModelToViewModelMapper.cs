@@ -35,7 +35,7 @@ namespace StockBuddy.Client.Shared.DomainGateways.Mapping
             // because the stocksplit mapping accesses the cache.
             foreach (var stock in stocks)
             {
-                var stockVm = _cache.GetStock(stock.Id);
+                var stockVm = _cache.GetStock(stock.ID);
 
                 foreach (var stockSplit in stock.GetStockSplits())
                 {
@@ -65,7 +65,7 @@ namespace StockBuddy.Client.Shared.DomainGateways.Mapping
                     tradeVm.Deposit = depositVm;
 
                     if (trade.Stock != null)
-                        tradeVm.Stock = _cache.GetStock(trade.StockId);
+                        tradeVm.Stock = _cache.GetStock(trade.StockID);
 
                     depositVm.Trades.Add(tradeVm);
                 }
@@ -124,7 +124,7 @@ namespace StockBuddy.Client.Shared.DomainGateways.Mapping
         {
             return new DepositViewModel
             {
-                Id = deposit.Id,
+                Id = deposit.ID,
                 Description = deposit.Description,
                 IdentityNumber = deposit.IdentityNumber,
                 DepositType = deposit.DepositType
@@ -135,7 +135,7 @@ namespace StockBuddy.Client.Shared.DomainGateways.Mapping
         {
             return new TradeViewModel
             {
-                Id = trade.Id,
+                Id = trade.ID,
                 IsBuy = trade.IsBuy,
                 IsSale = !trade.IsBuy,
                 Quantity = trade.Quantity,
@@ -149,7 +149,7 @@ namespace StockBuddy.Client.Shared.DomainGateways.Mapping
         {
             return new StockViewModel
             {
-                Id = stock.Id,
+                Id = stock.ID,
                 Name = stock.Name,
                 Symbol = stock.Symbol,
                 Isin = stock.Isin,
@@ -162,7 +162,7 @@ namespace StockBuddy.Client.Shared.DomainGateways.Mapping
         {
             return new StockSplitViewModel
             {
-                Id = stockSplit.Id,
+                Id = stockSplit.ID,
                 Date = stockSplit.Date,
                 OldStock = _cache.GetStock(stockSplit.OldStockID),
                 NewStock = _cache.GetStock(stockSplit.NewStockID),
@@ -175,7 +175,7 @@ namespace StockBuddy.Client.Shared.DomainGateways.Mapping
         {
             return new GeneralMeetingViewModel
             {
-                Id = generalMeeting.Id,
+                Id = generalMeeting.ID,
                 MeetingDate = generalMeeting.MeetingDate,
                 Stock = _cache.GetStock(generalMeeting.StockID),
                 DividendRate = generalMeeting.DividendRate
@@ -186,7 +186,7 @@ namespace StockBuddy.Client.Shared.DomainGateways.Mapping
         {
             var vm = new DividendViewModel
             {
-                Id = dividend.Id,
+                Id = dividend.ID,
                 Quantity = dividend.Quantity,
                 DividendPayment = dividend.DividendPayment,
                 IsCreated = dividend.IsCreated,

@@ -12,16 +12,16 @@ namespace StockBuddy.Domain.Entities
         }
 
         public Trade(int id, bool isBuy, int quantity, decimal price, decimal commission, DateTime tradeDate, 
-            int depositId, int stockId, Deposit deposit, Stock stock)
+            int depositID, int stockID, Deposit deposit, Stock stock)
         {
-            Id = id;
+            ID = id;
             IsBuy = isBuy;
             Quantity = quantity;
             Price = price;
             Commission = commission;
             TradeDate = tradeDate;
-            DepositId = depositId;
-            StockId = stockId;
+            DepositID = depositID;
+            StockID = stockID;
             Deposit = deposit;
             Stock = stock;
         }
@@ -31,8 +31,8 @@ namespace StockBuddy.Domain.Entities
         public decimal Price { get; private set; }
         public decimal Commission { get; private set; }
         public DateTime TradeDate { get; private set; }
-        public int DepositId { get; private set; }
-        public int StockId { get; private set; }
+        public int DepositID { get; private set; }
+        public int StockID { get; private set; }
 
         public Deposit Deposit { get; private set; }
         public Stock Stock { get; private set; }

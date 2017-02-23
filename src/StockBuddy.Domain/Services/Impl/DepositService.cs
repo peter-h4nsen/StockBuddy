@@ -62,18 +62,10 @@ namespace StockBuddy.Domain.Services.Impl
         {
             using (var uow = _uowFactory.Create(true))
             {
-                try
-                {
-                    uow.RepoOf<Trade>().BatchDelete(p => p.DepositId == depositId);
-                    uow.Repo<IDepositRepository>().Delete(depositId);
-                    uow.SaveChanges();
-                    uow.CommitTransaction();
-                }
-                catch
-                {
-                    uow.RollbackTransaction();
-                    throw;
-                }
+                uow.RepoOf<Trade>().BatchDelete(p => p.DepositID == depositId);
+                uow.Repo<IDepositRepository>().Delete(depositId);
+                uow.SaveChanges();
+                uow.CommitTransaction();
             }
         }
 

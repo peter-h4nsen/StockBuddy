@@ -9,6 +9,8 @@ using StockBuddy.Client.Shared.ViewModels;
 using StockBuddy.Client.Wpf.Services;
 using StockBuddy.Client.Wpf.Views;
 using System.Threading.Tasks;
+using StockBuddy.Shared.Utilities;
+using System.Windows.Navigation;
 
 namespace StockBuddy.Client.Wpf
 {

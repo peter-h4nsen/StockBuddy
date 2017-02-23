@@ -12,14 +12,14 @@ using System.Linq;
 
 namespace StockBuddy.DataAccess.Db.Repositories
 {
-    public sealed class EfUnitOfWork : IUnitOfWork
+    internal sealed class EfUnitOfWork : IUnitOfWork
     {
         private readonly EfRepositoryFactory _repositoryFactory;
         private readonly IDictionary<Type, object> _repositoryCache;
         private readonly StockSplit[] _stockSplits;
 
         private readonly StockBuddyDbContext _dbContext;
-        private readonly DbContextTransaction _dbContextTransaction;
+        private readonly DbContextTransaction _transaction;
         
         public EfUnitOfWork(EfRepositoryFactory repositoryFactory, string connectionString, 
             bool useExplicitTransaction, StockSplit[] stockSplits)
@@ -30,10 +30,10 @@ namespace StockBuddy.DataAccess.Db.Repositories
             _stockSplits = stockSplits;
             _repositoryCache = new Dictionary<Type, object>();
             _dbContext = new StockBuddyDbContext(connectionString);
-            
+
             if (useExplicitTransaction)
             {
-                _dbContextTransaction = _dbContext.Database.BeginTransaction();
+                _transaction = _dbContext.Database.BeginTransaction();
             }
 
             _dbContext.ObjectContext.ObjectMaterialized += OnObjectMaterialized;
@@ -55,13 +55,13 @@ namespace StockBuddy.DataAccess.Db.Repositories
         public void CommitTransaction()
         {
             ThrowOnInvalidState(true);
-            _dbContextTransaction.Commit();
+            _transaction.Commit();
         }
 
         public void RollbackTransaction()
         {
             ThrowOnInvalidState(true);
-            _dbContextTransaction.Rollback();
+            _transaction.Rollback();
         }
 
         private void ThrowOnInvalidState(bool checkExplicitTransaction)
@@ -69,10 +69,11 @@ namespace StockBuddy.DataAccess.Db.Repositories
             if (_isDisposed)
                 throw new ObjectDisposedException(GetType().FullName);
 
-            if (checkExplicitTransaction && _dbContextTransaction == null)
+            if (checkExplicitTransaction && _transaction == null)
                 throw new InvalidOperationException("Explicit transaction not enabled.");
         }
 
+        #region StockSplits (Should probably not be in this class)
         private void OnObjectMaterialized(object sender, ObjectMaterializedEventArgs e)
         {
             // When EF initializes a Stock entity, stocksplits are added to it.
@@ -80,7 +81,7 @@ namespace StockBuddy.DataAccess.Db.Repositories
 
             if (stock != null && _stockSplits != null)
             {
-                stock.SetStockSplits(GetAllStockSplits(stock.Id, _stockSplits));
+                stock.SetStockSplits(GetAllStockSplits(stock.ID, _stockSplits));
             }
         }
 
@@ -109,9 +110,11 @@ namespace StockBuddy.DataAccess.Db.Repositories
                 }
             }
         }
+        #endregion
 
         #region Repository creation and caching
-        private TRepo CreateRepository<TRepo>(Func<StockBuddyDbContext, TRepo> factory) where TRepo : class
+        private TRepo CreateRepository<TRepo>(
+                Func<StockBuddyDbContext, DbContextTransaction, TRepo> factory) where TRepo : class
         {
             Guard.AgainstNull(() => factory);
 
@@ -119,7 +122,7 @@ namespace StockBuddy.DataAccess.Db.Repositories
 
             if (repository == null)
             {
-                repository = factory(_dbContext);
+                repository = factory(_dbContext, _transaction);
                 _repositoryCache[typeof(TRepo)] = repository;
             }
 
@@ -156,9 +159,9 @@ namespace StockBuddy.DataAccess.Db.Repositories
                 {
                     // Called by dispose method via using-statement or similar. Clean up managed resources here.
 
-                    if (_dbContextTransaction != null)
+                    if (_transaction != null)
                     {
-                        _dbContextTransaction.Dispose();
+                        _transaction.Dispose();
                     }
                         
                     _dbContext.Dispose();

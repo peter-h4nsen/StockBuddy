@@ -4,12 +4,14 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using StockBuddy.Domain.Entities;
 using StockBuddy.Domain.Repositories;
+using System.Linq;
+using StockBuddy.Domain.DTO;
 
 namespace StockBuddy.DataAccess.Webservices.YahooFinance
 {
     public sealed class YahooFinanceStockInfoRepository : IStockInfoRetrieverRepository
     {
-        private const string BaseAddress = "http://ichart.yahoo.com";
+        private const string BaseAddress = "http://chart.finance.yahoo.com";
 
         private readonly HistoricalStockInfoCsvParser _historicalStockInfoCsvParser;
 
@@ -18,8 +20,8 @@ namespace StockBuddy.DataAccess.Webservices.YahooFinance
             _historicalStockInfoCsvParser = new HistoricalStockInfoCsvParser();
         }
 
-        public async Task<IEnumerable<HistoricalStockInfo>> GetHistoricalStockInfo(
-            string symbol, DateTime fromDate, DateTime toDate)
+        public async Task<HistoricalStockInfoResult> GetHistoricalStockInfo(
+                string symbol, DateTime fromDate, DateTime toDate)
         {
             if (string.IsNullOrWhiteSpace(symbol))
                 throw new ArgumentException($"String parameter can't be null or empty: {nameof(symbol)}");
@@ -33,8 +35,19 @@ namespace StockBuddy.DataAccess.Webservices.YahooFinance
             {
                 httpClient.BaseAddress = new Uri(BaseAddress);
 
-                var responseString = await httpClient.GetStringAsync(uri).ConfigureAwait(false);
-                return _historicalStockInfoCsvParser.Parse(responseString, symbol);
+                HistoricalStockInfo[] stockInfoItems = null;
+                bool isSuccess = false;
+
+                var response = await httpClient.GetAsync(uri).ConfigureAwait(false);
+
+                if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
+                {
+                    var responseString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    stockInfoItems = _historicalStockInfoCsvParser.Parse(responseString, symbol).ToArray();
+                    isSuccess = true;
+                }
+
+                return new HistoricalStockInfoResult(symbol, stockInfoItems, isSuccess);
             }
         }
 

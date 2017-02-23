@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using StockBuddy.Client.Shared.ViewModels;
+using System.Threading.Tasks;
 
 namespace StockBuddy.Client.Shared.DomainGateways.Contracts
 {
@@ -22,6 +23,6 @@ namespace StockBuddy.Client.Shared.DomainGateways.Contracts
         void DeleteGeneralMeeting(int generalMeetingId);
         IEnumerable<GeneralMeetingViewModel> GetAllGeneralMeetings();
 
-        void Test();
+        Task<bool> UpdateHistoricalStockInfo();
     }
 }

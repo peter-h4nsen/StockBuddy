@@ -27,7 +27,7 @@ namespace StockBuddy.Client.Shared.DomainGateways.Impl
 
             var trade = _viewModelToModelMapper.MapToTrade(tradeVm);
             _tradeService.CreateTrade(trade);
-            tradeVm.Id = trade.Id;
+            tradeVm.Id = trade.ID;
         }
 
         public TradeInfoDto GetTradeInfo(TradeViewModel tradeVm, int depositId)
